@@ -26,12 +26,14 @@ var config = {
 
   app.use(cors()) // Use this after the variable declaration
 
+//ดึงค่า profile User รายคนตาม id
 app.get('/api/get/user/:doc', (req, res) => {
     firestore.collection("user").doc(req.params.doc).get().then(function(docs){
         res.json(docs.data()); 
     });
 });
 
+//ส่งค่า profile เข้าไปใน firebase
 app.post('/api/post/user', (req, res) => {
     const user = {
         userId:req.body.userId,
@@ -48,6 +50,7 @@ app.post('/api/post/user', (req, res) => {
     res.json(user);
 });
 
+//แก้ไข profile
 app.put('/api/edit/user/:doc', (req, res) => {
     const edit = {
         name: req.body.name,
@@ -62,3 +65,22 @@ app.put('/api/edit/user/:doc', (req, res) => {
         res.json(edit);
     });
 
+//บันทึกเวลาเข้า-ออก
+let showTimes = 0;
+app.post('/api/post/time', (req, res) => {
+    const time = {
+        id:req,
+        userId:req.body.userId,
+        timeIn:req.body.timeIn,
+        timeOut:req.body.timeOut,
+        date:req.body.date
+    }
+    firestore.collection("checkInOut").doc(time.id).set({ 
+        id:time.id,
+        userId:time.userId,
+        timeIn:time.timeIn,
+        timeOut:time.timeOut,
+        date:time.date
+    });
+    res.json(user);
+});
