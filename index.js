@@ -66,21 +66,62 @@ app.put('/api/edit/user/:doc', (req, res) => {
     });
 
 //บันทึกเวลาเข้า-ออก
-let showTimes = 0;
-app.post('/api/post/time', (req, res) => {
-    const time = {
-        id:req,
+// let showTimes = 0;
+// app.post('/api/post/time', (req, res) => {
+//     const time = {
+//         id:req,
+//         userId:req.body.userId,
+//         timeIn:req.body.timeIn,
+//         timeOut:req.body.timeOut,
+//         date:req.body.date
+//     }
+//     firestore.collection("checkInOut").doc(time.id).set({ 
+//         id:time.id,
+//         userId:time.userId,
+//         timeIn:time.timeIn,
+//         timeOut:time.timeOut,
+//         date:time.date
+//     });
+//     res.json(user);
+// });
+
+// เก็บใบลา
+app.post('/api/post/leave', (req, res) => {
+    const leave = {
+        id:req.body.id,
         userId:req.body.userId,
-        timeIn:req.body.timeIn,
-        timeOut:req.body.timeOut,
-        date:req.body.date
+        leaveType:req.body.leaveType,
+        reson:req.body.reson,
+        startValue:req.body.startValue,
+        endValue:req.body.endValue,
+        status:req.body.status
     }
-    firestore.collection("checkInOut").doc(time.id).set({ 
-        id:time.id,
-        userId:time.userId,
-        timeIn:time.timeIn,
-        timeOut:time.timeOut,
-        date:time.date
+    firestore.collection("leave").doc(leave.id).set({ 
+        id:leave.id,
+        userId:leave.userId,
+        leaveType:leave.leaveType,
+        reson:leave.reson,
+        startValue:leave.startValue,
+        endValue:leave.endValue,
+        status:leave.status
     });
-    res.json(user);
+    res.json(leave);
+});
+//เก็บ เข้า-ออก
+app.post('/api/post/inout', (req, res) => {
+    const inOut = {
+        idtime:"cdcd",
+        currentTime:req.body.currentTime,
+        // timeOut:req.body.timeOut,
+        // userId:req.body.userId,
+        currentDate:req.body.currentDate,
+    }
+    firestore.collection("timeinout").doc(inOut.idtime).set({ 
+        idtime:inOut.idtime,
+        currentTime:inOut.currentTime,
+        // timeOut:inOut.timeOut,
+        // userId:inOut.userId,
+        currentDate:inOut.currentDate
+    });
+    res.json(inOut);
 });
