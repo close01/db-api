@@ -86,26 +86,31 @@ app.put('/api/edit/user/:doc', (req, res) => {
 // });
 
 // เก็บใบลา
-app.post('/api/post/leave', (req, res) => {
-    const leave = {
-        id:req.body.id,
-        userId:req.body.userId,
-        leaveType:req.body.leaveType,
-        reson:req.body.reson,
-        startValue:req.body.startValue,
-        endValue:req.body.endValue,
-        status:req.body.status
+app.post('/api/post/leave', async (req,res) => {
+    let size = 0
+    await firestore.collection('leave').get().then(snap => {
+        size = snap.size
+    })
+    console.log(size);
+    const dbL = {
+        id: size+1,
+        userId: req.body.userId,
+        leaveType: req.body.leaveType,
+        reson: req.body.reson,
+        startValue: req.body.startValue,
+        endValue: req.body.endValue,
+        status: req.body.status
     }
-    firestore.collection("leave").doc(leave.id).set({ 
-        id:leave.id,
-        userId:leave.userId,
-        leaveType:leave.leaveType,
-        reson:leave.reson,
-        startValue:leave.startValue,
-        endValue:leave.endValue,
-        status:leave.status
+    firestore.collection('leave').doc().set({ 
+        id:dbL.id,
+        userId:dbL.userId,
+        leaveType:dbL.leaveType,
+        reson:dbL.reson,
+        startValue:dbL.startValue,
+        endValue:dbL.endValue,
+        status:dbL.status
     });
-    res.json(leave);
+    res.json(dbL);
 });
 //เก็บ เข้า-ออก
 app.post('/api/post/inout', (req, res) => {
