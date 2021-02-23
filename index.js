@@ -88,7 +88,7 @@ app.put('/api/edit/user/:doc', (req, res) => {
 // เก็บใบลา
 app.post('/api/post/leave', async (req,res) => {
     let size = 0
-    await firestore.collection('leave').get().then(snap => {
+    await firestore.collection("leave").get().then(snap => {
         size = snap.size
     })
     console.log(size);
@@ -101,7 +101,7 @@ app.post('/api/post/leave', async (req,res) => {
         endValue: req.body.endValue,
         status: req.body.status
     }
-    firestore.collection('leave').doc().set({ 
+    firestore.collection("leave").doc().set({ 
         id:dbL.id,
         userId:dbL.userId,
         leaveType:dbL.leaveType,
@@ -112,6 +112,18 @@ app.post('/api/post/leave', async (req,res) => {
     });
     res.json(dbL);
 });
+//get ใบลา ตาม user
+app.get('/api/get/leaveByUser/:doc', (req, res) => {
+    firestore.collection("leave").where("userId","==",req.params.doc).get().then(function(snapshot){
+        // console.log(snapshot.docs.length);
+        let item = []
+        snapshot.forEach(function(docs){
+            console.log(docs.data());
+            item.push(docs.data())
+        });res.json(item)
+    });   
+});
+
 //เก็บ เข้า-ออก
 app.post('/api/post/inout', (req, res) => {
     const inOut = {
