@@ -64,38 +64,15 @@ app.put('/api/edit/user/:doc', (req, res) => {
         });
         res.json(edit);
     });
-
-//บันทึกเวลาเข้า-ออก
-// let showTimes = 0;
-// app.post('/api/post/time', (req, res) => {
-//     const time = {
-//         id:req,
-//         userId:req.body.userId,
-//         timeIn:req.body.timeIn,
-//         timeOut:req.body.timeOut,
-//         date:req.body.date
-//     }
-//     firestore.collection("checkInOut").doc(time.id).set({ 
-//         id:time.id,
-//         userId:time.userId,
-//         timeIn:time.timeIn,
-//         timeOut:time.timeOut,
-//         date:time.date
-//     });
-//     res.json(user);
-// });
-
+     
 // เก็บใบลา
 app.post('/api/post/leave',async (req,res) => {
-    // let size = 0
-    // await firestore.collection("leave").get().then(snap => {
-    //     size = snap.size
-    // })
+
     const newLeave = firestore.collection("leave").doc()
     const newLeaveRef = await newLeave.get()
  
     const dbL = {
-        
+
         userId: req.body.userId,
         leaveType: req.body.leaveType,
         reson: req.body.reson,
@@ -106,36 +83,31 @@ app.post('/api/post/leave',async (req,res) => {
         dateEnd:req.body.dateEnd
     }
     await newLeave.set({
-            id:newLeaveRef.id,
-            userId:dbL.userId,
-            leaveType:dbL.leaveType,
-            reson:dbL.reson,
-            startValue:dbL.startValue,
-            endValue:dbL.endValue,
-            status:dbL.status,
-            dateStart:dbL.dateStart,
-            dateEnd:dbL.dateEnd
+        id:newLeaveRef.id,
+        userId:dbL.userId,
+        leaveType:dbL.leaveType,
+        reson:dbL.reson,
+        startValue:dbL.startValue,
+        endValue:dbL.endValue,
+        status:dbL.status,
+        dateStart:dbL.dateStart,
+        dateEnd:dbL.dateEnd
     })
     res.json(dbL);
 });
 //get ใบลา ตาม user
 app.get('/api/get/leaveByUser/:doc', (req, res) => {
-    firestore.collection("leave").where("userId","==",req.params.doc).get().then(function(snapshot){
-        // console.log(snapshot.docs.length);
+    // firestore.collection("leave").where("userId","==",req.params.doc).get().then(function(snapshot){
+        firestore.collection("leave").orderBy('status').get().then(function(snapshot){
         let item = []
         snapshot.forEach(function(docs){
-            // console.log(docs.data());
-            const str = docs.data().startValue
-            // const date = str.split('T')
-            // const D1 = date[0].split('-')
-            // const DateS =D1[2]+"/"+D1[1]+"/"+D1[0]
-            // console.log(DateS);
-            console.log(new Date(docs.data().startValue));
+
             item.push(docs.data())
-            // console.log(docs.data().startValue);
+
         });
         console.log(item);
-    });   
+        res.json(item);
+    });
 });
 
 //เก็บ เข้า-ออก
@@ -158,20 +130,17 @@ app.post('/api/post/inout', (req, res) => {
 });
 
 app.post('/api/post/calendar', async (req, res) => {
-    let size = 0
-    await firestore.collection("calendar").get().then(snap => {
-        size = snap.size
-    })
-    console.log(size);
+    const newCalendar = firestore.collection("calendar").doc()
+    const newCalendarRef = await newCalendar.get()
     const calender = {
-        id: size+1,
+
         userId: req.body.userId,
         activity: req.body.activity,
         dateActivity: req.body.dateActivity,
         date: req.body.date
     }
-    firestore.collection("calendar").doc().set({ 
-        id: calender.id,
+    await newCalendar.set({ 
+        id: newCalendarRef.id,
         userId: calender.userId,
         activity: calender.activity,
         dateActivity: calender.dateActivity,
