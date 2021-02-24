@@ -86,15 +86,16 @@ app.put('/api/edit/user/:doc', (req, res) => {
 // });
 
 // เก็บใบลา
-app.post('/api/post/leave', async (req,res) => {
+app.post('/api/post/leave',async (req,res) => {
     // let size = 0
     // await firestore.collection("leave").get().then(snap => {
     //     size = snap.size
     // })
-    const newLeave = firestore.collection("leave").doc();
-    // console.log(size);
+    const newLeave = firestore.collection("leave").doc()
+    const newLeaveRef = await newLeave.get()
+ 
     const dbL = {
-        id: newLeave.key,
+        
         userId: req.body.userId,
         leaveType: req.body.leaveType,
         reson: req.body.reson,
@@ -104,18 +105,17 @@ app.post('/api/post/leave', async (req,res) => {
         dateStart:req.body.dateStart,
         dateEnd:req.body.dateEnd
     }
-    // firestore.collection("leave").doc().set({ 
-    newLeave.doc().set({ 
-        id:dbL.id,
-        userId:dbL.userId,
-        leaveType:dbL.leaveType,
-        reson:dbL.reson,
-        startValue:dbL.startValue,
-        endValue:dbL.endValue,
-        status:dbL.status,
-        dateStart:dbL.dateStart,
-        dateEnd:dbL.dateEnd
-    });
+    await newLeave.set({
+            id:newLeaveRef.id,
+            userId:dbL.userId,
+            leaveType:dbL.leaveType,
+            reson:dbL.reson,
+            startValue:dbL.startValue,
+            endValue:dbL.endValue,
+            status:dbL.status,
+            dateStart:dbL.dateStart,
+            dateEnd:dbL.dateEnd
+    })
     res.json(dbL);
 });
 //get ใบลา ตาม user
