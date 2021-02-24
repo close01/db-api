@@ -92,7 +92,7 @@ app.post('/api/post/leave', async (req,res) => {
     //     size = snap.size
     // })
     const newLeave = firestore.collection("leave").doc();
-    console.log(size);
+    // console.log(size);
     const dbL = {
         id: newLeave.key,
         userId: req.body.userId,
@@ -100,7 +100,9 @@ app.post('/api/post/leave', async (req,res) => {
         reson: req.body.reson,
         startValue: req.body.startValue,
         endValue: req.body.endValue,
-        status: req.body.status
+        status: req.body.status,
+        dateStart:req.body.dateStart,
+        dateEnd:req.body.dateEnd
     }
     // firestore.collection("leave").doc().set({ 
     newLeave.doc().set({ 
@@ -110,7 +112,9 @@ app.post('/api/post/leave', async (req,res) => {
         reson:dbL.reson,
         startValue:dbL.startValue,
         endValue:dbL.endValue,
-        status:dbL.status
+        status:dbL.status,
+        dateStart:dbL.dateStart,
+        dateEnd:dbL.dateEnd
     });
     res.json(dbL);
 });
