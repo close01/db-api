@@ -118,9 +118,18 @@ app.get('/api/get/leaveByUser/:doc', (req, res) => {
         // console.log(snapshot.docs.length);
         let item = []
         snapshot.forEach(function(docs){
-            console.log(docs.data());
+            // console.log(docs.data());
+            const str = docs.data().startValue
+            const date = str.split('T')
+            const D1 = date[0].split('-')
+            const DateS =D1[2]+"/"+D1[1]+"/"+D1[0]
+            console.log(DateS);
+            console.log(docs.data().startValue);
+            item.push(docs.data().dateS)
             item.push(docs.data())
-        });res.json(item)
+            // console.log(docs.data().startValue);
+        });
+        console.log(item);
     });   
 });
 
