@@ -87,13 +87,14 @@ app.put('/api/edit/user/:doc', (req, res) => {
 
 // เก็บใบลา
 app.post('/api/post/leave', async (req,res) => {
-    let size = 0
-    await firestore.collection("leave").get().then(snap => {
-        size = snap.size
-    })
+    // let size = 0
+    // await firestore.collection("leave").get().then(snap => {
+    //     size = snap.size
+    // })
+    const newLeave = firestore.collection("leave").doc();
     console.log(size);
     const dbL = {
-        id: size+1,
+        id: newLeave.key,
         userId: req.body.userId,
         leaveType: req.body.leaveType,
         reson: req.body.reson,
@@ -101,7 +102,8 @@ app.post('/api/post/leave', async (req,res) => {
         endValue: req.body.endValue,
         status: req.body.status
     }
-    firestore.collection("leave").doc().set({ 
+    // firestore.collection("leave").doc().set({ 
+    newLeave.doc().set({ 
         id:dbL.id,
         userId:dbL.userId,
         leaveType:dbL.leaveType,
@@ -120,12 +122,11 @@ app.get('/api/get/leaveByUser/:doc', (req, res) => {
         snapshot.forEach(function(docs){
             // console.log(docs.data());
             const str = docs.data().startValue
-            const date = str.split('T')
-            const D1 = date[0].split('-')
-            const DateS =D1[2]+"/"+D1[1]+"/"+D1[0]
-            console.log(DateS);
-            console.log(docs.data().startValue);
-            item.push(docs.data().dateS)
+            // const date = str.split('T')
+            // const D1 = date[0].split('-')
+            // const DateS =D1[2]+"/"+D1[1]+"/"+D1[0]
+            // console.log(DateS);
+            console.log(new Date(docs.data().startValue));
             item.push(docs.data())
             // console.log(docs.data().startValue);
         });
@@ -150,4 +151,27 @@ app.post('/api/post/inout', (req, res) => {
         currentDate:inOut.currentDate
     });
     res.json(inOut);
+});
+
+app.post('/api/post/calendar', async (req, res) => {
+    let size = 0
+    await firestore.collection("calendar").get().then(snap => {
+        size = snap.size
+    })
+    console.log(size);
+    const calender = {
+        id: size+1,
+        userId: req.body.userId,
+        activity: req.body.activity,
+        dateActivity: req.body.dateActivity,
+        date: req.body.date
+    }
+    firestore.collection("calendar").doc().set({ 
+        id: calender.id,
+        userId: calender.userId,
+        activity: calender.activity,
+        dateActivity: calender.dateActivity,
+        date: calender.date
+    });
+    res.json(calender);
 });
