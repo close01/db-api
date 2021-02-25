@@ -105,11 +105,29 @@ app.get('/api/get/leaveByUser/:doc', (req, res) => {
             item.push(docs.data())
 
         });
-        
        res.json(item); 
     });
 });
-
+//get ใบให้ hr approve
+app.get('/api/get/approve', (req, res) => {
+    let item = []
+    firestore.collection("leave").where("status","==","รออนุมัติ").get().then(function(snapshot){
+        snapshot.forEach(function(docs){
+            item.push(docs.data())
+        });
+       res.json(item); 
+    });
+});
+//update status approve or not ส่งไอดีของใบลา
+app.put('/api/updateStatus/:doc', (req,res) => {
+    const approve = {
+        status: req.body.status
+    }
+    firestore.collection("leave").doc(req.params.doc).update({
+        status: approve.status
+    });
+    res.json(approve);
+});
 //เก็บ เข้า-ออก
 app.post('/api/post/inout', (req, res) => {
     const inOut = {
@@ -147,4 +165,19 @@ app.post('/api/post/calendar', async (req, res) => {
         date: calender.date
     });
     res.json(calender);
+});
+
+//แก้ไข calendar
+app.put('/api/edit/calendar/:doc', (req, res) => {
+    const editCalendar = {
+        activity: req.body.activity,
+        dateActivity: req.body.dateActivity,
+        date: req.body.date
+    }
+    firestore.collection("calendar").doc(req.params.doc).update({ 
+        activity: editCalendar.activity,
+        dateActivity: editCalendar.dateActivity,
+        date: editCalendar.date
+    });
+    res.json(editCalendar);
 });
