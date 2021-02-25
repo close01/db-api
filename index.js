@@ -95,18 +95,18 @@ app.post('/api/post/leave',async (req,res) => {
     })
     res.json(dbL);
 });
-//get ใบลา ตาม user
+//get ใบลา ตาม user หน้าstatus user ต้องการ uerId
 app.get('/api/get/leaveByUser/:doc', (req, res) => {
-    // firestore.collection("leave").where("userId","==",req.params.doc).get().then(function(snapshot){
-        firestore.collection("leave").orderBy('status').get().then(function(snapshot){
-        let item = []
+    let item = []
+    firestore.collection("leave").where("userId","==",req.params.doc).orderBy("status").get().then(function(snapshot){
+
         snapshot.forEach(function(docs){
 
             item.push(docs.data())
 
         });
-        console.log(item);
-        res.json(item);
+        
+       res.json(item); 
     });
 });
 
