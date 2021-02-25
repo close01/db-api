@@ -13,7 +13,8 @@
   "dependencies": {
     "@types/firebase": "^3.2.1",
     "cors": "^2.8.5",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "moment": "^2.29.1"
   },
   "devDependencies": {
     "firebase": "^8.2.7"

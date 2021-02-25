@@ -22,7 +22,8 @@ var config = {
   firebase.initializeApp(config);
   let firestore = firebase.firestore()
 
-  var cors = require('cors')
+  var cors = require('cors');
+const moment = require('moment');
 
   app.use(cors()) // Use this after the variable declaration
 
@@ -36,12 +37,14 @@ app.get('/api/get/user/:doc', (req, res) => {
 //ส่งค่า profile เข้าไปใน firebase
 app.post('/api/post/user', (req, res) => {
     const user = {
+        imgURL:req.body.imgUrl,
         userId:req.body.userId,
         name:req.body.name,
         nickname:req.body.nickname,
         position:req.body.position
     }
     firestore.collection("user").doc(user.userId).set({ 
+        imgURL:user.imgURL,
         userId:user.userId,
         name: user.name,
         nickname: user.nickname,
@@ -109,11 +112,11 @@ app.get('/api/get/leaveByUser/:doc', (req, res) => {
     });
 });
 //get ใบให้ hr approve
-app.get('/api/get/approve', (req, res) => {
+app.get('/api/get/approve',(req, res) => {
     let item = []
     firestore.collection("leave").where("status","==","รออนุมัติ").get().then(function(snapshot){
         snapshot.forEach(function(docs){
-            item.push(docs.data())
+            item.push(docs.data());
         });
        res.json(item); 
     });
@@ -181,3 +184,21 @@ app.put('/api/edit/calendar/:doc', (req, res) => {
     });
     res.json(editCalendar);
 });
+
+//get calendar order by date
+app.get('/api/get/calendar', (req, res) => {
+    const moment = require("moment");
+    let item = []
+    firestore.collection("calendar").where("date", ">=",moment().format()).orderBy("date").get().then(function(snapshot){
+        snapshot.forEach(function(docs){
+            item.push(docs.data())
+        });
+       res.json(item); 
+    });
+});
+
+//delete calendar
+app.delete('/api/delete/calendar/:doc', (req, res) => {
+    firestore.collection("calendar").doc(req.params.doc).delete()
+    res.json();
+})
