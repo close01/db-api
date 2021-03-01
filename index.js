@@ -138,7 +138,7 @@ app.put('/api/updateStatus/:doc', (req,res) => {
     }
     firestore.collection("leave").doc(req.params.doc).update({
         status: approve.status
-    });
+    })
     res.json(approve);
 });
 //เก็บ เข้า-ออก
