@@ -112,24 +112,23 @@ app.get('/api/get/leaveByUser/:doc', (req, res) => {
     });
 });
 //get ใบให้ hr approve
-app.get('/api/get/approve',(req, res) => {
+app.get('/api/get/approve',async (req, res) => {
     let items = []
-    firestore.collection("leave").where("status","==","รออนุมัติ").get().then(function(snapshot){
-        snapshot.forEach (async function(docs){
-            let arrayItems = items.map(item =>{
-                const x = firestore.collection("user").where("userId","==",docs.data().userId).get()
-                item["name"] = x.name
-                console.log("x",x);
-                return item
-            })
-            // const arrayItem = items.map(item => {
-            //     // item["name"] = userid.data().name
-            //     return item
-            // })
-            // console.log("x",x);
+    firestore.collection("leave").where("status","==","รออนุมัติ").get().then(async function(snapshot){
+        snapshot.forEach (function(docs){
             items.push(docs.data());
-            console.log(arrayItems);
         });
+
+        let arrayItem = await Promise.all(items.map(async item =>{
+            let x = await firestore.collection("user").where("userId","==",item.userId).get().then(function (snapshot) {
+                snapshot.forEach(function (a) {
+                    item["name"] = a.data().name
+                    return item
+                })
+            })
+            return item
+        }))
+        console.log(arrayItem);
        res.json(items); 
     });
 });
