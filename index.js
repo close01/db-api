@@ -119,8 +119,8 @@ app.get('/api/get/approve',async (req, res) => {
             items.push(docs.data());
         });
 
-        let arrayItem = await Promise.all(items.map(async item =>{
-            let x = await firestore.collection("user").where("userId","==",item.userId).get().then(function (snapshot) {
+        await Promise.all(items.map(async item =>{
+            await firestore.collection("user").where("userId","==",item.userId).get().then(function (snapshot) {
                 snapshot.forEach(function (a) {
                     item["name"] = a.data().name
                     return item
@@ -128,7 +128,6 @@ app.get('/api/get/approve',async (req, res) => {
             })
             return item
         }))
-        console.log(arrayItem);
        res.json(items); 
     });
 });
