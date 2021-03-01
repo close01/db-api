@@ -113,15 +113,27 @@ app.get('/api/get/leaveByUser/:doc', (req, res) => {
 });
 //get ใบให้ hr approve
 app.get('/api/get/approve',(req, res) => {
-    let item = []
+    let items = []
     firestore.collection("leave").where("status","==","รออนุมัติ").get().then(function(snapshot){
-        snapshot.forEach(function(docs){
-            item.push(docs.data());
+        snapshot.forEach (async function(docs){
+            let arrayItems = items.map(item =>{
+                const x = firestore.collection("user").where("userId","==",docs.data().userId).get()
+                item["name"] = x.name
+                console.log("x",x);
+                return item
+            })
+            // const arrayItem = items.map(item => {
+            //     // item["name"] = userid.data().name
+            //     return item
+            // })
+            // console.log("x",x);
+            items.push(docs.data());
+            console.log(arrayItems);
         });
-       res.json(item); 
+       res.json(items); 
     });
 });
-//update status approve or not ส่งไอดีของใบลา
+//update status approve ส่งไอดีของใบลา
 app.put('/api/updateStatus/:doc', (req,res) => {
     const approve = {
         status: req.body.status
@@ -150,6 +162,7 @@ app.post('/api/post/inout', (req, res) => {
     res.json(inOut);
 });
 
+//post calendar
 app.post('/api/post/calendar', async (req, res) => {
     const newCalendar = firestore.collection("calendar").doc()
     const newCalendarRef = await newCalendar.get()
