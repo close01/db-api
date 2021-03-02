@@ -60,11 +60,11 @@ app.put('/api/edit/user/:doc', (req, res) => {
         nickname: req.body.nickname,
         position: req.body.position
     }
-        firestore.collection("user").doc(req.params.doc).update({ 
-            name: edit.name,
-            nickname: edit.nickname,
-            position: edit.position
-        });
+    firestore.collection("user").doc(req.params.doc).update({ 
+        name: edit.name,
+        nickname: edit.nickname,
+        position: edit.position
+    });
         res.json(edit);
     });
      
@@ -139,26 +139,8 @@ app.put('/api/updateStatus/:doc', (req,res) => {
     firestore.collection("leave").doc(req.params.doc).update({
         status: approve.status
     })
-    res.json(approve);
-});
-//เก็บ เข้า-ออก
-app.post('/api/post/inout', (req, res) => {
-    const inOut = {
-        idtime:"cdcd",
-        currentTime:req.body.currentTime,
-        // timeOut:req.body.timeOut,
-        // userId:req.body.userId,
-        currentDate:req.body.currentDate,
-    }
-    firestore.collection("timeinout").doc(inOut.idtime).set({ 
-        idtime:inOut.idtime,
-        currentTime:inOut.currentTime,
-        // timeOut:inOut.timeOut,
-        // userId:inOut.userId,
-        currentDate:inOut.currentDate
-    });
-    res.json(inOut);
-});
+    res.json(approve)
+})
 
 //post calendar
 app.post('/api/post/calendar', async (req, res) => {
@@ -218,4 +200,34 @@ app.get('/api/get/calendar/1/:doc', (req,res) => {
 app.delete('/api/delete/calendar/:doc', (req, res) => {
     firestore.collection("calendar").doc(req.params.doc).delete()
     res.json();
-})
+});
+
+//เก็บ เข้า-ออก
+app.post('/api/post/checkIn',async (req, res) => {
+    const newCheck = firestore.collection("checkinout").doc()
+    const newCheckRef = await newCheck.get()
+
+    const inOut = {
+        timeIn:req.body.timeIn,
+        timeOut:req.body.timeOut,
+        userId:req.body.userId,
+        dateShow:req.body.dateShow,
+        dateGet:req.body.dateGet,
+    }
+    await newCheck.set({ 
+        id:newCheckRef.id,
+        timeIn:inOut.timeIn,
+        timeOut:inOut.timeOut,
+        userId:inOut.userId,
+        dateShow:inOut.dateShow,
+        dateGet:inOut.dateGet
+    });
+    res.json(inOut);
+});
+//get ส่ง userId
+app.get('/api/get/check/:doc', (req,res) => {
+    const moment = require("moment");
+    firestore.collection("checkinout").where("userId","==",req.params.doc).where("dateGet","==",moment().format("l")).get().then(function(docs){
+        res.json("pass");
+    });
+});
