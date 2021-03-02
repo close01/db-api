@@ -207,6 +207,12 @@ app.get('/api/get/calendar', (req, res) => {
        res.json(item); 
     });
 });
+//get 1 role calendar
+app.get('/api/get/calendar/1/:doc', (req,res) => {
+    firestore.collection("calendar").doc(req.params.doc).get().then(function (docs) {
+        res.json(docs.data());
+    });
+});
 
 //delete calendar
 app.delete('/api/delete/calendar/:doc', (req, res) => {
