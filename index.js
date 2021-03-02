@@ -228,12 +228,20 @@ app.post('/api/post/checkIn',async (req, res) => {
 app.get('/api/get/check/:doc', (req, res) => {
     const moment = require("moment");
     const dateCheck = moment().format("l");
-    let item = []
+    // let item = []
     const newCheck = firestore.collection("checkinout").where("userId","==",req.params.doc)
     newCheck.where("dateGet","==",dateCheck).get().then(function(snapshot){
-        snapshot.forEach(function(docs){
-            item.push(docs.data())
-        });
-       res.json(item); 
+        console.log(snapshot);
+        if (snapshot.length > 0) {
+            snapshot.forEach(function(docs){
+                console.log(docs.data());
+                    res.json(docs.data())
+            });
+        }
+        else {
+            res.json(null)
+        }
+        
+    //    res.json(item); 
     }); 
 });
