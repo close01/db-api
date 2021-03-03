@@ -281,8 +281,8 @@ app.get('/api/get/report/chackinout/',async (req,res) =>{
         return item
     }))
     res.json(items); 
-    let m = moment("20181031", "YYYYMMDD");
-    console.log("m",m); // 02/21/2021
+    let ms = moment("20181031", "YYYYMMDD");
+    console.log("m",ms); // 02/21/2021
 
     })
 });
