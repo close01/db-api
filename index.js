@@ -246,7 +246,6 @@ app.put('/api/update/checkout/:doc', (req,res) => {
     const dateCheck = moment().format("l");
     let Ref = ""
     const updateOut = {
-        status:"กดแล้ว",
         timeOut:req.body.timeOut
     }
     const checkOut = firestore.collection("checkinout").where("userId","==",req.params.doc)
@@ -256,7 +255,6 @@ app.put('/api/update/checkout/:doc', (req,res) => {
         }); 
     console.log("ref",Ref);
     firestore.collection("checkinout").doc(Ref).update({
-        status: updateOut.status,
         timeOut:updateOut.timeOut
     });
     res.json(updateOut)
