@@ -213,6 +213,7 @@ app.post('/api/post/checkIn',async (req, res) => {
         userId:req.body.userId,
         dateShow:req.body.dateShow,
         dateGet:req.body.dateGet,
+        status:req.body.status
     }
     await newCheck.set({ 
         id:newCheckRef.id,
@@ -220,7 +221,8 @@ app.post('/api/post/checkIn',async (req, res) => {
         timeOut:inOut.timeOut,
         userId:inOut.userId,
         dateShow:inOut.dateShow,
-        dateGet:inOut.dateGet
+        dateGet:inOut.dateGet,
+        status:inOut.status
     });
     res.json(inOut);
 });
@@ -228,14 +230,38 @@ app.post('/api/post/checkIn',async (req, res) => {
 app.get('/api/get/check/:doc', (req, res) => {
     const moment = require("moment");
     const dateCheck = moment().format("l");
-    // let item = []
     const newCheck = firestore.collection("checkinout").where("userId","==",req.params.doc)
     newCheck.where("dateGet","==",dateCheck).get().then(function(snapshot){
             snapshot.forEach(function(docs){
                 res.json(docs.data())    
+                console.log(docs.data().id);
             });
             res.json(null)
-        
+            // console.log("get",newCheck.id);
     //    res.json(item); 
     }); 
+});
+
+//update status and timeout
+app.put('/api/update/checkout/:doc', (req,res) => {
+    const moment = require("moment");
+    const dateCheck = moment().format("l");
+    let Ref = ""
+    const updateOut = {
+        status:"กดแล้ว",
+        timeOut:req.body.timeOut
+    }
+    const checkOut = firestore.collection("checkinout").where("userId","==",req.params.doc)
+    checkOut.where("dateGet","==",dateCheck).get().then(function(snapshot){
+        snapshot.forEach(function(docs){    
+            Ref = docs.data().id
+        }); 
+    console.log("ref",Ref);
+    firestore.collection("checkinout").doc(Ref).update({
+        status: updateOut.status,
+        timeOut:updateOut.timeOut
+    });
+    res.json(updateOut)
+    });
+    console.log(Ref);
 });
