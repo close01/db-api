@@ -261,3 +261,28 @@ app.put('/api/update/checkout/:doc', (req,res) => {
     });
     console.log(Ref);
 });
+
+//get roport chack in out 
+app.get('/api/get/report/chackinout/',async (req,res) =>{
+    let items = []
+    firestore.collection("checkinout").orderBy("dateGet").orderBy("userId").get().then(async function (snapshot) {
+        snapshot.forEach(function (docs) {
+            items.push(docs.data())
+        })
+        // res.json(items)
+        await Promise.all(items.map(async item =>{
+        await firestore.collection("user").where("userId","==",item.userId).get().then(function (snapshot) {
+            snapshot.forEach(function (a) {
+                item["name"] = a.data().name
+                item["position"] = a.data().position
+                return item
+            })
+        })
+        return item
+    }))
+    res.json(items); 
+    let m = moment("20181031", "YYYYMMDD");
+    console.log("m",m); // 02/21/2021
+
+    })
+});
