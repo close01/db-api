@@ -212,8 +212,7 @@ app.post('/api/post/checkIn',async (req, res) => {
         timeOut:req.body.timeOut,
         userId:req.body.userId,
         dateShow:req.body.dateShow,
-        dateGet:req.body.dateGet,
-        status:req.body.status
+        dateGet:req.body.dateGet
     }
     await newCheck.set({ 
         id:newCheckRef.id,
@@ -221,8 +220,7 @@ app.post('/api/post/checkIn',async (req, res) => {
         timeOut:inOut.timeOut,
         userId:inOut.userId,
         dateShow:inOut.dateShow,
-        dateGet:inOut.dateGet,
-        status:inOut.status
+        dateGet:inOut.dateGet
     });
     res.json(inOut);
 });
