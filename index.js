@@ -3,7 +3,7 @@ const express = require('express');
 const app = express();
 app.use(express.json());
 
-const port = process.env.PORT || 3030
+const port = process.env.PORT || 3038
 app.listen(port, () => console.log(`Listening on port${port}...`) );
 
 const firebase = require("firebase/app")
@@ -182,6 +182,7 @@ app.put('/api/edit/calendar/:doc', (req, res) => {
 app.get('/api/get/calendar', (req, res) => {
     const moment = require("moment");
     let item = []
+    
     firestore.collection("calendar").where("date", ">=",moment().format()).orderBy("date").get().then(function(snapshot){
         snapshot.forEach(function(docs){
             item.push(docs.data())
@@ -229,14 +230,13 @@ app.get('/api/get/check/:doc', (req, res) => {
     const moment = require("moment");
     const dateCheck = moment().format("l");
     const newCheck = firestore.collection("checkinout").where("userId","==",req.params.doc)
+    
     newCheck.where("dateGet","==",dateCheck).get().then(function(snapshot){
-            snapshot.forEach(function(docs){
-                res.json(docs.data())    
-                console.log(docs.data().id);
-            });
-            res.json(null)
-            // console.log("get",newCheck.id);
-    //    res.json(item); 
+        snapshot.forEach(function(docs){
+            res.json(docs.data())    
+            console.log(docs.data().id);
+        });
+        res.json(null)
     }); 
 });
 
@@ -249,6 +249,7 @@ app.put('/api/update/checkout/:doc', (req,res) => {
         timeOut:req.body.timeOut
     }
     const checkOut = firestore.collection("checkinout").where("userId","==",req.params.doc)
+    
     checkOut.where("dateGet","==",dateCheck).get().then(function(snapshot){
         snapshot.forEach(function(docs){    
             Ref = docs.data().id
@@ -261,28 +262,349 @@ app.put('/api/update/checkout/:doc', (req,res) => {
     });
     console.log(Ref);
 });
-
-//get roport chack in out 
+//get roport chack in out รายปี
 app.get('/api/get/report/chackinout/',async (req,res) =>{
     let items = []
-    firestore.collection("checkinout").orderBy("dateGet").orderBy("userId").get().then(async function (snapshot) {
+    const dbCheck = firestore.collection("checkinout")
+    let y21 = moment("20210101").format(); // 2021-01-01T00:00:00+07:00
+    let y22 = moment("20220101").format(); // 2022-01-01T00:00:00+07:00
+    dbCheck.where("dateShow",">=",y21).where("dateShow","<",y22)
+    .orderBy("dateShow").orderBy("userId")
+    .get().then(async function (snapshot) {
         snapshot.forEach(function (docs) {
             items.push(docs.data())
         })
-        // res.json(items)
-        await Promise.all(items.map(async item =>{
-        await firestore.collection("user").where("userId","==",item.userId).get().then(function (snapshot) {
-            snapshot.forEach(function (a) {
-                item["name"] = a.data().name
-                item["position"] = a.data().position
-                return item
-            })
-        })
-        return item
-    }))
-    res.json(items); 
-    let ms = moment("20181031", "YYYYMMDD");
-    console.log("m",ms); // 02/21/2021
 
+        await Promise.all(items.map(async item =>{
+            await firestore.collection("user").where("userId","==",item.userId).get().then(function (snapshot) {
+                snapshot.forEach(function (a) {
+                    item["name"] = a.data().name
+                    item["position"] = a.data().position
+                    return item
+                })
+            })
+        return item
+        }))
+    res.json(items);  
     })
 });
+///////////////////
+app.get('/report/year', (req,res) =>{
+    let items = []
+    let yNow = ""
+    let yBack = ""
+    const yearRef = {
+        yy:req.body.yy
+    }
+    const db = firestore.collection("checkinout")
+    db.get()
+        .then(function () {
+            if(yearRef.yy == "2564"){
+                return(
+                    yNow = moment("20210101").format(),//2564
+                    yBack = moment("20220101").format()//2565
+                )
+                
+            }else if(yearRef.yy == "2565"){
+                return(
+                    yNow = moment("20220101").format(),//2565
+                    yBack = moment("20230101").format()//2566
+                )
+                
+            }else if(yearRef.yy == "2566"){
+                return(
+                    yNow = moment("20230101").format(),//2566
+                    yBack = moment("20240101").format()//2567
+                )  
+            }
+        }).then(function () {
+            db.where("dateShow",">=",yNow).where("dateShow","<",yBack)
+            .orderBy("dateShow").orderBy("userId")
+            .get().then(async function (snapshot) {
+                snapshot.forEach(function (docs) {
+                    items.push(docs.data())
+                })
+        
+                await Promise.all(items.map(async item =>{
+                    await firestore.collection("user").where("userId","==",item.userId).get().then(function (snapshot) {
+                        snapshot.forEach(function (a) {
+                            item["name"] = a.data().name
+                            item["position"] = a.data().position
+                            return item
+                        })
+                    })
+                return item
+                }))
+            res.json(items);  
+            })
+        })
+})
+app.get('/report/month', (req,res) =>{
+    let items = []
+    let m = moment("20210101") // 2021-01-01T00:00:00+07:00
+    let mNow = ""
+    let mBack = ""
+    const monthRef = {
+        mm:req.body.mm
+    }
+    const db = firestore.collection("checkinout")
+    db.get().then(function () {
+            switch (monthRef.mm) {
+                case 'มกราคม':
+                    mNow = m.format(),
+                    mBack = m.add(1, 'month').format();
+                    break;
+                case 'กุมภาพันธ์':
+                    mNow = m.add(1, 'month').format(),
+                    mBack = m.add(2, 'month').format();
+                    break;
+                case 'มีนาคม':
+                    mNow = m.add(2, 'month').format(),
+                    mBack = m.add(3, 'month').format();
+                    break;
+                case 'เมษายน':
+                    mNow = m.add(3, 'month').format(),
+                    mBack = m.add(4, 'month').format();
+                    break;
+                case 'พฤษภาคม':
+                    mNow = m.add(4, 'month').format(),
+                    mBack = m.add(5, 'month').format();
+                    break;
+                case 'มิถุนายน':
+                    mNow = m.add(5, 'month').format(),
+                    mBack = m.add(6, 'month').format();
+                    break;
+                case 'กรกฎาคม':
+                    mNow = m.add(6, 'month').format(),
+                    mBack = m.add(7, 'month').format();
+                    break;
+                case 'สิงหาคม':
+                    mNow = m.add(7, 'month').format(),
+                    mBack = m.add(8, 'month').format();
+                    break;
+                case 'กันยายน':
+                    mNow = m.add(8, 'month').format(),
+                    mBack = m.add(9, 'month').format();
+                    break;
+                case 'ตุลาคม':
+                    mNow = m.add(9, 'month').format(),
+                    mBack = m.add(10, 'month').format();
+                    break;
+                case 'พฤศจิกายน':
+                    mNow = m.add(10, 'month').format(),
+                    mBack = m.add(11, 'month').format();
+                    break;   
+                case 'ธันวาคม':
+                    mNow = m.add(11, 'month').format(),
+                    mBack = m.add(12, 'month').format();
+                    break; 
+                case 'ทั้งหมด':
+                    mNow = m.format(),
+                    mBack = m.add(12, 'month').format();
+                    break;  
+              }
+            }).then(function () {
+            db.where("dateShow",">=",mNow).where("dateShow","<",mBack)
+            .orderBy("dateShow").orderBy("userId")
+            .get().then(async function (snapshot) {
+                snapshot.forEach(function (docs) {
+                    items.push(docs.data())
+                })
+        
+                await Promise.all(items.map(async item =>{
+                    await firestore.collection("user").where("userId","==",item.userId).get().then(function (snapshot) {
+                        snapshot.forEach(function (a) {
+                            item["name"] = a.data().name
+                            item["position"] = a.data().position
+                            return item
+                        })
+                    })
+                return item
+                }))
+            res.json(items);  
+            })
+        })
+})
+///////////get
+app.get('/user/check', (req,res) => {
+    let items = []
+    let m = moment("20210101")
+    let mN = ""
+    let mB = ""
+    const monthReq = {
+        mm:req.body.mm
+    }
+    const db = firestore.collection("user")
+    const dbChack = firestore.collection("checkinout")
+    db.get().then(async function (snapshot) {
+        snapshot.forEach(function (docs) {
+            items.push(docs.data())
+        })
+        await Promise.all(items.map(async item =>{
+            await dbChack.get().then(function () {
+                switch (monthReq.mm) {
+                    case 'มกราคม':
+                        mNow = m.format(),
+                        mBack = m.add(1, 'month').format();
+                        break;
+                    case 'กุมภาพันธ์':
+                        mNow = m.add(1, 'month').format(),
+                        mBack = m.add(2, 'month').format();
+                        break;
+                    case 'มีนาคม':
+                        mNow = m.add(2, 'month').format(),
+                        mBack = m.add(3, 'month').format();
+                        break;
+                    case 'เมษายน':
+                        mNow = m.add(3, 'month').format(),
+                        mBack = m.add(4, 'month').format();
+                        break;
+                    case 'พฤษภาคม':
+                        mNow = m.add(4, 'month').format(),
+                        mBack = m.add(5, 'month').format();
+                        break;
+                    case 'มิถุนายน':
+                        mNow = m.add(5, 'month').format(),
+                        mBack = m.add(6, 'month').format();
+                        break;
+                    case 'กรกฎาคม':
+                        mNow = m.add(6, 'month').format(),
+                        mBack = m.add(7, 'month').format();
+                        break;
+                    case 'สิงหาคม':
+                        mNow = m.add(7, 'month').format(),
+                        mBack = m.add(8, 'month').format();
+                        break;
+                    case 'กันยายน':
+                        mNow = m.add(8, 'month').format(),
+                        mBack = m.add(9, 'month').format();
+                        break;
+                    case 'ตุลาคม':
+                        mNow = m.add(9, 'month').format(),
+                        mBack = m.add(10, 'month').format();
+                        break;
+                    case 'พฤศจิกายน':
+                        mNow = m.add(10, 'month').format(),
+                        mBack = m.add(11, 'month').format();
+                        break;   
+                    case 'ธันวาคม':
+                        mNow = m.add(11, 'month').format(),
+                        mBack = m.add(12, 'month').format();
+                        break; 
+                    case 'ทั้งหมด':
+                        mNow = m.format(),
+                        mBack = m.add(12, 'month').format();
+                        break;  
+                  }
+            }).then(async function () {
+                await dbChack.where("userId","==",item.userId).where("dateShow",">=",mNow).where("dateShow","<",mBack)
+                .get().then(async function (snap) {
+                    await snap.forEach(function (u) {
+                        item["inout"].push(u.data())
+                        console.log(item);
+                        return item
+                        
+                    })
+                    
+                })
+            })
+            // return item
+        })), res.json(items);
+    })
+})
+////////////
+app.get('/get/user',async (req,res) => {
+    const dbuser = await firestore.collection("user")
+    const dbinout =await  firestore.collection("checkinout")
+
+    const queryDBUserSnapshot = await dbuser.get()
+    const dbUserDocs = queryDBUserSnapshot.docs.map(doc => doc.data());
+    const last = await Promise.all(dbUserDocs.map(async (data) => {
+            let temp ={ info: data }
+            const result = await dbinout.where('userId','==', data.userId).orderBy('dateShow').get()
+            const inout = result.docs.map(doc => doc.data());
+            temp = {...temp, inout }
+            // console.log(temp);
+            return temp
+    }))
+    // console.log(last);
+    res.json(last)
+})
+app.get('/get/user1',async (req,res) => {
+    let m = moment("20210101") // 2021-01-01T00:00:00+07:00
+    let mNow = ""
+    let mBack = ""
+    const monthRef = {
+        mm:req.body.mm
+    }
+    switch (monthRef.mm) {
+        case 'มกราคม':
+            mNow = m.format(),
+            mBack = m.add(1, 'month').format();
+            break;
+        case 'กุมภาพันธ์':
+            mNow = m.add(1, 'month').format(),
+            mBack = m.add(2, 'month').format();
+            break;
+        case 'มีนาคม':
+            mNow = m.add(2, 'month').format(),
+            mBack = m.add(3, 'month').format();
+            break;
+        case 'เมษายน':
+            mNow = m.add(3, 'month').format(),
+            mBack = m.add(4, 'month').format();
+            break;
+        case 'พฤษภาคม':
+            mNow = m.add(4, 'month').format(),
+            mBack = m.add(5, 'month').format();
+            break;
+        case 'มิถุนายน':
+            mNow = m.add(5, 'month').format(),
+            mBack = m.add(6, 'month').format();
+            break;
+        case 'กรกฎาคม':
+            mNow = m.add(6, 'month').format(),
+            mBack = m.add(7, 'month').format();
+            break;
+        case 'สิงหาคม':
+            mNow = m.add(7, 'month').format(),
+            mBack = m.add(8, 'month').format();
+            break;
+        case 'กันยายน':
+            mNow = m.add(8, 'month').format(),
+            mBack = m.add(9, 'month').format();
+            break;
+        case 'ตุลาคม':
+            mNow = m.add(9, 'month').format(),
+            mBack = m.add(10, 'month').format();
+            break;
+        case 'พฤศจิกายน':
+            mNow = m.add(10, 'month').format(),
+            mBack = m.add(11, 'month').format();
+            break;   
+        case 'ธันวาคม':
+            mNow = m.add(11, 'month').format(),
+            mBack = m.add(12, 'month').format();
+            break; 
+        case 'ทั้งหมด':
+            mNow = m.format(),
+            mBack = m.add(12, 'month').format();
+            break;  
+      }
+    const dbuser = await firestore.collection("user")
+    const dbinout =await  firestore.collection("checkinout")
+
+    const queryDBUserSnapshot = await dbuser.get()
+    const dbUserDocs = queryDBUserSnapshot.docs.map(doc => doc.data());
+    const last = await Promise.all(dbUserDocs.map(async (data) => {
+            let temp ={ info: data }
+            const result = await dbinout.where('userId','==', data.userId)
+            .where("dateShow",">=",mNow).where("dateShow","<",mBack).orderBy('dateShow').get()
+            const inout = result.docs.map(doc => doc.data());
+            temp = {...temp, inout }
+            // console.log(temp);
+            return temp
+    }))
+    // console.log(last);
+    res.json(last)
+})
