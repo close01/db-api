@@ -530,14 +530,11 @@ app.get('/get/user',async (req,res) => {
     // console.log(last);
     res.json(last)
 })
-app.get('/get/user1',async (req,res) => {
+app.get('/get/user1/:doc',async (req,res) => {
     let m = moment("20210101") // 2021-01-01T00:00:00+07:00
     let mNow = ""
     let mBack = ""
-    const monthRef = {
-        mm:req.body.mm
-    }
-    switch (monthRef.mm) {
+    switch (req.params.doc) {
         case 'มกราคม':
             mNow = m.format(),
             mBack = m.add(1, 'month').format();
@@ -607,4 +604,18 @@ app.get('/get/user1',async (req,res) => {
     }))
     // console.log(last);
     res.json(last)
+})
+//////
+app.get('/report/leave',async (req,res) =>{
+    const dbUser = await firestore.collection('user')
+    const dbLeave =await firestore.collection('leave').where('sttus','<','รออนุมัติ')
+
+    const queryDBUserSnapshot = await dbUser.get()
+    const dbUserDocs = queryDBUserSnapshot.docs.map(doc => doc.data());
+
+    const reoprt = await Promise.all(dbUserDocs.map(async (data)=>{
+        let temp = {info: data}
+        const result = await dbLeave.where('userId',"==",data.userId).orderBy('status').get()
+        const leave
+    }))
 })
