@@ -23,7 +23,7 @@ var config = {
   let firestore = firebase.firestore()
 
   var cors = require('cors');
-const moment = require('moment');
+  const moment = require('moment');
 
   app.use(cors()) // Use this after the variable declaration
 
@@ -608,14 +608,19 @@ app.get('/get/user1/:doc',async (req,res) => {
 //////
 app.get('/report/leave',async (req,res) =>{
     const dbUser = await firestore.collection('user')
-    const dbLeave =await firestore.collection('leave').where('sttus','<','รออนุมัติ')
+    const dbLeave =await firestore.collection('leave').where('status','>','รออนุมัติ')
 
     const queryDBUserSnapshot = await dbUser.get()
     const dbUserDocs = queryDBUserSnapshot.docs.map(doc => doc.data());
 
-    const reoprt = await Promise.all(dbUserDocs.map(async (data)=>{
-        let temp = {info: data}
+    const report = await Promise.all(dbUserDocs.map(async (data)=>{
+        let temp = {info: data }
         const result = await dbLeave.where('userId',"==",data.userId).orderBy('status').get()
-        const leave
+        const leave = result.docs.map(doc=> doc.data());
+        temp = {...temp, leave}
+        // console.log(temp);
+        return temp
     }))
+    // console.log(report);
+    res.json(report)
 })
