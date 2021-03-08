@@ -3,7 +3,7 @@ const express = require('express');
 const app = express();
 app.use(express.json());
 
-const port = process.env.PORT || 3038
+const port = process.env.PORT || 3039
 app.listen(port, () => console.log(`Listening on port${port}...`) );
 
 const firebase = require("firebase/app")
@@ -538,54 +538,80 @@ app.get('/get/user1/:doc',async (req,res) => {
         case 'มกราคม':
             mNow = m.format(),
             mBack = m.add(1, 'month').format();
+            console.log(mNow);
+            console.log(mBack);
             break;
         case 'กุมภาพันธ์':
             mNow = m.add(1, 'month').format(),
-            mBack = m.add(2, 'month').format();
+            mBack = m.add(1, 'month').format();
+            console.log(mNow);
+            console.log(mBack);
             break;
         case 'มีนาคม':
             mNow = m.add(2, 'month').format(),
-            mBack = m.add(3, 'month').format();
+            mBack = m.add(1, 'month').format();
+            console.log(mNow);
+            console.log(mBack);
             break;
         case 'เมษายน':
             mNow = m.add(3, 'month').format(),
-            mBack = m.add(4, 'month').format();
+            mBack = m.add(1, 'month').format();
+            console.log(mNow);
+            console.log(mBack);
             break;
         case 'พฤษภาคม':
             mNow = m.add(4, 'month').format(),
-            mBack = m.add(5, 'month').format();
+            mBack = m.add(1, 'month').format();
+            console.log(mNow);
+            console.log(mBack);
             break;
         case 'มิถุนายน':
             mNow = m.add(5, 'month').format(),
-            mBack = m.add(6, 'month').format();
+            mBack = m.add(1, 'month').format();
+            console.log(mNow);
+            console.log(mBack);
             break;
         case 'กรกฎาคม':
             mNow = m.add(6, 'month').format(),
-            mBack = m.add(7, 'month').format();
+            mBack = m.add(1, 'month').format();
+            console.log(mNow);
+            console.log(mBack);
             break;
         case 'สิงหาคม':
             mNow = m.add(7, 'month').format(),
-            mBack = m.add(8, 'month').format();
+            mBack = m.add(1, 'month').format();
+            console.log(mNow);
+            console.log(mBack);
             break;
         case 'กันยายน':
             mNow = m.add(8, 'month').format(),
-            mBack = m.add(9, 'month').format();
+            mBack = m.add(1, 'month').format();
+            console.log(mNow);
+            console.log(mBack);
             break;
         case 'ตุลาคม':
             mNow = m.add(9, 'month').format(),
-            mBack = m.add(10, 'month').format();
+            mBack = m.add(1, 'month').format();
+            console.log(mNow);
+            console.log(mBack);
             break;
         case 'พฤศจิกายน':
             mNow = m.add(10, 'month').format(),
-            mBack = m.add(11, 'month').format();
+            mBack = m.add(1, 'month').format();
+            console.log(mNow);
+            console.log(mBack);
             break;   
         case 'ธันวาคม':
             mNow = m.add(11, 'month').format(),
-            mBack = m.add(12, 'month').format();
+            mBack = m.add(1, 'month').format();
+            console.log(mNow);
+            console.log(mBack);
             break; 
         case 'ทั้งหมด':
             mNow = m.format(),
             mBack = m.add(12, 'month').format();
+            console.log(mNow);
+            console.log(mBack);
             break;  
       }
     const dbuser = await firestore.collection("user")
