@@ -532,8 +532,8 @@ app.get('/get/user',async (req,res) => {
 })
 app.get('/get/user1/:doc',async (req,res) => {
     let m = moment("20210101") // 2021-01-01T00:00:00+07:00
-    let mNow = ""
-    let mBack = ""
+    const mNow = ""
+    const mBack = ""
     switch (req.params.doc) {
         case 'มกราคม':
             mNow = m.format(),
@@ -609,16 +609,40 @@ app.get('/get/user1/:doc',async (req,res) => {
 app.get('/report/leave',async (req,res) =>{
     const dbUser = await firestore.collection('user')
     const dbLeave =await firestore.collection('leave').where('status','>','รออนุมัติ')
-
+    let itema = []
+    let itemb = []
+    let a = 0
+    let b = 0
     const queryDBUserSnapshot = await dbUser.get()
     const dbUserDocs = queryDBUserSnapshot.docs.map(doc => doc.data());
 
     const report = await Promise.all(dbUserDocs.map(async (data)=>{
         let temp = {info: data }
+        dbLeave.where('userId',"==",data.userId).where('status','==','อนุมัติ').get().then(function (snapshot) {
+            snapshot.forEach(function(docs){
+                
+                itema.push(docs.data())
+            })
+            a = itema.length
+            console.log("a",itema.length);
+            itema = []
+        })
+        dbLeave.where('userId',"==",data.userId).where('status','==','ไม่อนุมัติ').get().then(function (snapshot) {
+            snapshot.forEach(function(docs){
+                
+                itemb.push(docs.data())
+            })
+            b = itemb.length
+            console.log("b",itemb.length);
+            itemb = []
+        })
+        // console.log(numApprove);
+        data['numApprove'] = a
+        data['numDisapproval'] = b
+        
         const result = await dbLeave.where('userId',"==",data.userId).orderBy('status').get()
         const leave = result.docs.map(doc=> doc.data());
         temp = {...temp, leave}
-        // console.log(temp);
         return temp
     }))
     // console.log(report);
