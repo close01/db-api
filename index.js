@@ -532,8 +532,8 @@ app.get('/get/user',async (req,res) => {
 })
 app.get('/get/user1/:doc',async (req,res) => {
     let m = moment("20210101") // 2021-01-01T00:00:00+07:00
-    const mNow = ""
-    const mBack = ""
+    let mNow = ""
+    let mBack = ""
     switch (req.params.doc) {
         case 'มกราคม':
             mNow = m.format(),
