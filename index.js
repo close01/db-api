@@ -604,8 +604,6 @@ app.get('/get/user1/:doc',async (req,res) => {
     }))
     // console.log(last);
     res.json(last)
-    let mNow = ""
-    let mBack = ""
 })
 //////
 app.get('/report/leave',async (req,res) =>{
