@@ -624,7 +624,8 @@ app.get('/get/user1/:doc',async (req,res) => {
             const result = await dbinout.where('userId','==', data.userId)
             .where("dateShow",">=",mNow).where("dateShow","<",mBack).orderBy('dateShow').get()
             const inout = result.docs.map(doc => doc.data());
-            temp = {...temp, inout }
+            // temp = {...temp, inout }
+            data['inout'] = inout
             // console.log(temp);
             return temp
     }))
@@ -644,32 +645,23 @@ app.get('/report/leave',async (req,res) =>{
 
     const report = await Promise.all(dbUserDocs.map(async (data)=>{
         let temp = {info: data }
-        dbLeave.where('userId',"==",data.userId).where('status','==','อนุมัติ').get().then(function (snapshot) {
-            snapshot.forEach(function(docs){
-                
-                itema.push(docs.data())
-            })
-            a = itema.length
-            console.log("a",itema.length);
-            itema = []
-        })
-        dbLeave.where('userId',"==",data.userId).where('status','==','ไม่อนุมัติ').get().then(function (snapshot) {
-            snapshot.forEach(function(docs){
-                
-                itemb.push(docs.data())
-            })
-            b = itemb.length
-            console.log("b",itemb.length);
-            itemb = []
-        })
-        // console.log(numApprove);
-        data['numApprove'] = a
-        data['numDisapproval'] = b
         
+
+        const result1 = await dbLeave.where('userId',"==",data.userId).where('status','==','อนุมัติ').get()
+        const result2 = result1.docs.map(doc=> doc.data());
+        const result3 = await dbLeave.where('userId',"==",data.userId).where('status','==','ไม่อนุมัติ').get()
+        const result4 = result3.docs.map(doc=> doc.data());
+        // console.log('aaaa',result2.length);
+        data['numApprove'] = result2.length
+        data['numDisapproval'] = result4.length
         const result = await dbLeave.where('userId',"==",data.userId).orderBy('status').get()
         const leave = result.docs.map(doc=> doc.data());
-        temp = {...temp, leave}
+        const leave1 = result.docs.map(doc=> doc.data());
+        // console.log(leave1.length);
+        // temp = {...temp, leave}
+        data['leave'] = leave
         return temp
+
     }))
     // console.log(report);
     res.json(report)
