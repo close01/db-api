@@ -43,7 +43,7 @@ app.post('/api/post/user', (req, res) => {
         name:req.body.name,
         nickname:req.body.nickname,
         position:req.body.position,
-        rank:"staff"
+        rank:req.body.rank
     }
     firestore.collection("user").doc(user.userId).set({ 
         imgURL:user.imgURL,
