@@ -38,7 +38,7 @@ app.get('/api/get/user/:doc', (req, res) => {
 //ส่งค่า profile เข้าไปใน firebase
 app.post('/api/post/user', (req, res) => {
     const user = {
-        imgURL:req.body.imgUrl,
+
         userId:req.body.userId,
         name:req.body.name,
         nickname:req.body.nickname,
@@ -46,7 +46,7 @@ app.post('/api/post/user', (req, res) => {
         rank:req.body.rank
     }
     firestore.collection("user").doc(user.userId).set({ 
-        imgURL:user.imgURL,
+
         userId:user.userId,
         name: user.name,
         nickname: user.nickname,
@@ -59,7 +59,7 @@ app.post('/api/post/user', (req, res) => {
 //api user hr
 app.post('/api/post/user/hr', (req, res) => {
     const user = {
-        imgURL:req.body.imgUrl,
+
         userId:req.body.userId,
         name:req.body.name,
         nickname:req.body.nickname,
@@ -67,7 +67,7 @@ app.post('/api/post/user/hr', (req, res) => {
         rank:"Human Resource (HR)"
     }
     firestore.collection("user").doc(user.userId).set({ 
-        imgURL:user.imgURL,
+        
         userId:user.userId,
         name: user.name,
         nickname: user.nickname,
