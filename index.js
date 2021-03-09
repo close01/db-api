@@ -31,7 +31,10 @@ app.use(cors()) // Use this after the variable declaration
 //ดึงค่า profile User รายคนตาม id
 app.get('/api/get/user/:doc', (req, res) => {
     firestore.collection("user").doc(req.params.doc).get().then(function(docs){
-        res.json(docs.data()); 
+        if(docs.data()){
+            res.json(docs.data()); 
+        }
+        res.json(null)
     });
 });
 
@@ -67,7 +70,7 @@ app.post('/api/post/user/hr', (req, res) => {
         rank:"Human Resource (HR)"
     }
     firestore.collection("user").doc(user.userId).set({ 
-        
+
         userId:user.userId,
         name: user.name,
         nickname: user.nickname,
