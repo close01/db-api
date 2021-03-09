@@ -24,6 +24,7 @@ let firestore = firebase.firestore()
 
 var cors = require('cors');
 const moment = require('moment');
+const { urlencoded } = require('express');
 
 app.use(cors()) // Use this after the variable declaration
 
@@ -41,14 +42,16 @@ app.post('/api/post/user', (req, res) => {
         userId:req.body.userId,
         name:req.body.name,
         nickname:req.body.nickname,
-        position:req.body.position
+        position:req.body.position,
+        rank:"staff"
     }
     firestore.collection("user").doc(user.userId).set({ 
         imgURL:user.imgURL,
         userId:user.userId,
         name: user.name,
         nickname: user.nickname,
-        position: user.position
+        position: user.position,
+        rank:user.rank
     });
     res.json(user);
 });
@@ -60,14 +63,16 @@ app.post('/api/post/user/hr', (req, res) => {
         userId:req.body.userId,
         name:req.body.name,
         nickname:req.body.nickname,
-        position:'Human Resource (HR)'
+        position:req.body.nickname,
+        rank:"Human Resource (HR)"
     }
     firestore.collection("user").doc(user.userId).set({ 
         imgURL:user.imgURL,
         userId:user.userId,
         name: user.name,
         nickname: user.nickname,
-        position: user.position
+        position: user.position,
+        rank:user.rank
     });
     res.json(user);
 });
@@ -92,12 +97,12 @@ app.put('/api/edit/user/hr/:doc', (req, res) => {
     const edit = {
         name: req.body.name,
         nickname: req.body.nickname,
-        // position: req.body.position
+        position: req.body.position
     }
     firestore.collection("user").doc(req.params.doc).update({ 
         name: edit.name,
         nickname: edit.nickname,
-        // position: edit.position
+        position: edit.position
     });
         res.json(edit);
 });
@@ -107,7 +112,7 @@ app.post('/api/post/leave',async (req,res) => {
 
     const newLeave = firestore.collection("leave").doc()
     const newLeaveRef = await newLeave.get()
-    
+
     const dbL = {
 
         userId: req.body.userId,
@@ -319,61 +324,11 @@ app.get('/api/get/report/chackinout/',async (req,res) =>{
                 })
             })
         return item
-        }))
-    res.json(items);  
-    })
+        })),res.json(items)
+    });
 });
-///////////////////
-app.get('/report/year', (req,res) =>{
-    let items = []
-    let yNow = ""
-    let yBack = ""
-    const yearRef = {
-        yy:req.body.yy
-    }
-    const db = firestore.collection("checkinout")
-    db.get()
-        .then(function () {
-            if(yearRef.yy == "2564"){
-                return(
-                    yNow = moment("20210101").format(),//2564
-                    yBack = moment("20220101").format()//2565
-                )
-                
-            }else if(yearRef.yy == "2565"){
-                return(
-                    yNow = moment("20220101").format(),//2565
-                    yBack = moment("20230101").format()//2566
-                )
-                
-            }else if(yearRef.yy == "2566"){
-                return(
-                    yNow = moment("20230101").format(),//2566
-                    yBack = moment("20240101").format()//2567
-                )  
-            }
-        }).then(function () {
-            db.where("dateShow",">=",yNow).where("dateShow","<",yBack)
-            .orderBy("dateShow").orderBy("userId")
-            .get().then(async function (snapshot) {
-                snapshot.forEach(function (docs) {
-                    items.push(docs.data())
-                })
-        
-                await Promise.all(items.map(async item =>{
-                    await firestore.collection("user").where("userId","==",item.userId).get().then(function (snapshot) {
-                        snapshot.forEach(function (a) {
-                            item["name"] = a.data().name
-                            item["position"] = a.data().position
-                            return item
-                        })
-                    })
-                return item
-                }))
-            res.json(items);  
-            })
-        })
-})
+
+////
 app.get('/report/month', (req,res) =>{
     let items = []
     let m = moment("20210101") // 2021-01-01T00:00:00+07:00
@@ -464,8 +419,8 @@ app.get('/report/month', (req,res) =>{
 app.get('/user/check', (req,res) => {
     let items = []
     let m = moment("20210101")
-    let mN = ""
-    let mB = ""
+    let mNow = ""
+    let mBack = ""
     const monthReq = {
         mm:req.body.mm
     }
@@ -691,7 +646,6 @@ app.get('/report/leave',async (req,res) =>{
         data['leave'] = leave
         return temp
 
-    }))
-    // console.log(report);
+    }));
     res.json(report)
 })
