@@ -18,14 +18,14 @@ var config = {
     messagingSenderId: "449356049325",
     appId: "1:449356049325:web:c65192887db0f30be8cf24",
     measurementId: "G-2ZQP5ZRXBF"   
-  };
-  firebase.initializeApp(config);
-  let firestore = firebase.firestore()
+};
+firebase.initializeApp(config);
+let firestore = firebase.firestore()
 
-  var cors = require('cors');
-  const moment = require('moment');
+var cors = require('cors');
+const moment = require('moment');
 
-  app.use(cors()) // Use this after the variable declaration
+app.use(cors()) // Use this after the variable declaration
 
 //ดึงค่า profile User รายคนตาม id
 app.get('/api/get/user/:doc', (req, res) => {
@@ -53,6 +53,25 @@ app.post('/api/post/user', (req, res) => {
     res.json(user);
 });
 
+//api user hr
+app.post('/api/post/user/hr', (req, res) => {
+    const user = {
+        imgURL:req.body.imgUrl,
+        userId:req.body.userId,
+        name:req.body.name,
+        nickname:req.body.nickname,
+        position:'Human Resource (HR)'
+    }
+    firestore.collection("user").doc(user.userId).set({ 
+        imgURL:user.imgURL,
+        userId:user.userId,
+        name: user.name,
+        nickname: user.nickname,
+        position: user.position
+    });
+    res.json(user);
+});
+
 //แก้ไข profile
 app.put('/api/edit/user/:doc', (req, res) => {
     const edit = {
@@ -66,14 +85,29 @@ app.put('/api/edit/user/:doc', (req, res) => {
         position: edit.position
     });
         res.json(edit);
-    });
+});
      
+//แก้ไข proflie hr
+app.put('/api/edit/user/hr/:doc', (req, res) => {
+    const edit = {
+        name: req.body.name,
+        nickname: req.body.nickname,
+        // position: req.body.position
+    }
+    firestore.collection("user").doc(req.params.doc).update({ 
+        name: edit.name,
+        nickname: edit.nickname,
+        // position: edit.position
+    });
+        res.json(edit);
+});
+
 // เก็บใบลา
 app.post('/api/post/leave',async (req,res) => {
 
     const newLeave = firestore.collection("leave").doc()
     const newLeaveRef = await newLeave.get()
- 
+    
     const dbL = {
 
         userId: req.body.userId,
@@ -111,6 +145,7 @@ app.get('/api/get/leaveByUser/:doc', (req, res) => {
        res.json(item); 
     });
 });
+
 //get ใบให้ hr approve
 app.get('/api/get/approve',async (req, res) => {
     let items = []
@@ -249,7 +284,7 @@ app.put('/api/update/checkout/:doc', (req,res) => {
         timeOut:req.body.timeOut
     }
     const checkOut = firestore.collection("checkinout").where("userId","==",req.params.doc)
-    
+
     checkOut.where("dateGet","==",dateCheck).get().then(function(snapshot){
         snapshot.forEach(function(docs){    
             Ref = docs.data().id
@@ -449,47 +484,47 @@ app.get('/user/check', (req,res) => {
                         break;
                     case 'กุมภาพันธ์':
                         mNow = m.add(1, 'month').format(),
-                        mBack = m.add(2, 'month').format();
+                        mBack = m.add(1, 'month').format();
                         break;
                     case 'มีนาคม':
                         mNow = m.add(2, 'month').format(),
-                        mBack = m.add(3, 'month').format();
+                        mBack = m.add(1, 'month').format();
                         break;
                     case 'เมษายน':
                         mNow = m.add(3, 'month').format(),
-                        mBack = m.add(4, 'month').format();
+                        mBack = m.add(1, 'month').format();
                         break;
                     case 'พฤษภาคม':
                         mNow = m.add(4, 'month').format(),
-                        mBack = m.add(5, 'month').format();
+                        mBack = m.add(1, 'month').format();
                         break;
                     case 'มิถุนายน':
                         mNow = m.add(5, 'month').format(),
-                        mBack = m.add(6, 'month').format();
+                        mBack = m.add(1, 'month').format();
                         break;
                     case 'กรกฎาคม':
                         mNow = m.add(6, 'month').format(),
-                        mBack = m.add(7, 'month').format();
+                        mBack = m.add(1, 'month').format();
                         break;
                     case 'สิงหาคม':
                         mNow = m.add(7, 'month').format(),
-                        mBack = m.add(8, 'month').format();
+                        mBack = m.add(1, 'month').format();
                         break;
                     case 'กันยายน':
                         mNow = m.add(8, 'month').format(),
-                        mBack = m.add(9, 'month').format();
+                        mBack = m.add(1, 'month').format();
                         break;
                     case 'ตุลาคม':
                         mNow = m.add(9, 'month').format(),
-                        mBack = m.add(10, 'month').format();
+                        mBack = m.add(1, 'month').format();
                         break;
                     case 'พฤศจิกายน':
                         mNow = m.add(10, 'month').format(),
-                        mBack = m.add(11, 'month').format();
+                        mBack = m.add(1, 'month').format();
                         break;   
                     case 'ธันวาคม':
                         mNow = m.add(11, 'month').format(),
-                        mBack = m.add(12, 'month').format();
+                        mBack = m.add(1, 'month').format();
                         break; 
                     case 'ทั้งหมด':
                         mNow = m.format(),
@@ -503,15 +538,13 @@ app.get('/user/check', (req,res) => {
                         item["inout"].push(u.data())
                         console.log(item);
                         return item
-                        
-                    })
-                    
+                    });
                 })
-            })
-            // return item
-        })), res.json(items);
-    })
-})
+            });
+        }))
+        res.json(items);
+    });
+});
 ////////////
 app.get('/get/user',async (req,res) => {
     const dbuser = await firestore.collection("user")
@@ -524,14 +557,13 @@ app.get('/get/user',async (req,res) => {
             const result = await dbinout.where('userId','==', data.userId).orderBy('dateShow').get()
             const inout = result.docs.map(doc => doc.data());
             temp = {...temp, inout }
-            // console.log(temp);
+
             return temp
-    }))
-    // console.log(last);
+    }));
     res.json(last)
 })
 app.get('/get/user1/:doc',async (req,res) => {
-    let m = moment("20210101") // 2021-01-01T00:00:00+07:00
+    let m = moment("20210101") // 2021-01-01T00:00:00+07:00 yyyy-mm-dd
     let mNow = ""
     let mBack = ""
     switch (req.params.doc) {
@@ -624,41 +656,38 @@ app.get('/get/user1/:doc',async (req,res) => {
             const result = await dbinout.where('userId','==', data.userId)
             .where("dateShow",">=",mNow).where("dateShow","<",mBack).orderBy('dateShow').get()
             const inout = result.docs.map(doc => doc.data());
-            // temp = {...temp, inout }
+
             data['inout'] = inout
-            // console.log(temp);
+
             return temp
-    }))
-    // console.log(last);
+    }));
     res.json(last)
 })
 //////
 app.get('/report/leave',async (req,res) =>{
-    const dbUser = await firestore.collection('user')
-    const dbLeave =await firestore.collection('leave').where('status','>','รออนุมัติ')
+
     let itema = []
     let itemb = []
     let a = 0
     let b = 0
+    const dbUser = await firestore.collection('user')
+    const dbLeave =await firestore.collection('leave').where('status','>','รออนุมัติ')
     const queryDBUserSnapshot = await dbUser.get()
     const dbUserDocs = queryDBUserSnapshot.docs.map(doc => doc.data());
 
     const report = await Promise.all(dbUserDocs.map(async (data)=>{
-        let temp = {info: data }
-        
+        let temp = {info: data };
 
-        const result1 = await dbLeave.where('userId',"==",data.userId).where('status','==','อนุมัติ').get()
+        const result1 = await dbLeave.where('userId',"==",data.userId).where('status','==','อนุมัติ').get();
         const result2 = result1.docs.map(doc=> doc.data());
         const result3 = await dbLeave.where('userId',"==",data.userId).where('status','==','ไม่อนุมัติ').get()
         const result4 = result3.docs.map(doc=> doc.data());
-        // console.log('aaaa',result2.length);
+
         data['numApprove'] = result2.length
         data['numDisapproval'] = result4.length
         const result = await dbLeave.where('userId',"==",data.userId).orderBy('status').get()
         const leave = result.docs.map(doc=> doc.data());
-        const leave1 = result.docs.map(doc=> doc.data());
-        // console.log(leave1.length);
-        // temp = {...temp, leave}
+
         data['leave'] = leave
         return temp
 
