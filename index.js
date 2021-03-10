@@ -647,8 +647,9 @@ app.get('/report/leave',async (req,res) =>{
         const leave = result.docs.map(doc=> doc.data());
 
         data['leave'] = leave
+        console.log(leave);
         return temp
-
     }));
     res.json(report)
+
 })
