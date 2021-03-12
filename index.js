@@ -116,12 +116,6 @@ app.post('/api/post/leave',async (req,res) => {
     const newLeave = firestore.collection("leave").doc()
     const newLeaveRef = await newLeave.get()
 
-    const LINE_MESSAGING_API = 'https://api.line.me/v2/bot/message/push';
-    const LINE_HEADER = {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer {l/MKxHe5xVT1oqZd2/1Bnr7bcR3HTtEXvwlrcfasdzU+I0xfAkb6zpFd8TYuurWXx7/CYuU6fAkMshGXKzgDNvYiHFQPXm+PX6GyTBVqc4SEpMBfiP3i7XRXIYY41qGZTyE6JC+7rP36BijepfhP6AdB04t89/1O/w1cDnyilFU=}`
-    };
-
     const dbL = {
 
         userId: req.body.userId,
@@ -144,18 +138,7 @@ app.post('/api/post/leave',async (req,res) => {
         dateStart:dbL.dateStart,
         dateEnd:dbL.dateEnd
     }),
-    request({
-      method: `POST`,
-      uri: `${LINE_MESSAGING_API}`,
-      headers: LINE_HEADER,
-      body: JSON.stringify({
-        to: "Ud7876758fece09a64eee8d3b1030fe76",
-        messages: [{
-            type: "text",
-            text: "have a request for leave"
-        }]
-    })
-  });
+    
     res.json(dbL);
 });
 //get ใบลา ตาม user หน้าstatus user ต้องการ uerId
