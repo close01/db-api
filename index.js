@@ -3,7 +3,7 @@ const express = require('express');
 const app = express();
 app.use(express.json());
 
-const port = process.env.PORT || 3039
+const port = process.env.PORT || 3303
 app.listen(port, () => console.log(`Listening on port${port}...`) );
 
 const firebase = require("firebase/app")
@@ -96,25 +96,31 @@ app.put('/api/edit/user/:doc', (req, res) => {
 });
      
 //แก้ไข proflie hr
-app.put('/api/edit/user/hr/:doc', (req, res) => {
-    const edit = {
-        name: req.body.name,
-        nickname: req.body.nickname,
-        position: req.body.position
-    }
-    firestore.collection("user").doc(req.params.doc).update({ 
-        name: edit.name,
-        nickname: edit.nickname,
-        position: edit.position
-    });
-        res.json(edit);
-});
+// app.put('/api/edit/user/hr/:doc', (req, res) => {
+//     const edit = {
+//         name: req.body.name,
+//         nickname: req.body.nickname,
+//         position: req.body.position
+//     }
+//     firestore.collection("user").doc(req.params.doc).update({ 
+//         name: edit.name,
+//         nickname: edit.nickname,
+//         position: edit.position
+//     });
+//         res.json(edit);
+// });
 
 // เก็บใบลา
 app.post('/api/post/leave',async (req,res) => {
 
     const newLeave = firestore.collection("leave").doc()
     const newLeaveRef = await newLeave.get()
+
+    const LINE_MESSAGING_API = 'https://api.line.me/v2/bot/message/push';
+    const LINE_HEADER = {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer {l/MKxHe5xVT1oqZd2/1Bnr7bcR3HTtEXvwlrcfasdzU+I0xfAkb6zpFd8TYuurWXx7/CYuU6fAkMshGXKzgDNvYiHFQPXm+PX6GyTBVqc4SEpMBfiP3i7XRXIYY41qGZTyE6JC+7rP36BijepfhP6AdB04t89/1O/w1cDnyilFU=}`
+    };
 
     const dbL = {
 
@@ -137,7 +143,19 @@ app.post('/api/post/leave',async (req,res) => {
         status:dbL.status,
         dateStart:dbL.dateStart,
         dateEnd:dbL.dateEnd
+    }),
+    request({
+      method: `POST`,
+      uri: `${LINE_MESSAGING_API}`,
+      headers: LINE_HEADER,
+      body: JSON.stringify({
+        to: "Ud7876758fece09a64eee8d3b1030fe76",
+        messages: [{
+            type: "text",
+            text: "have a request for leave"
+        }]
     })
+  });
     res.json(dbL);
 });
 //get ใบลา ตาม user หน้าstatus user ต้องการ uerId
@@ -651,5 +669,57 @@ app.get('/report/leave',async (req,res) =>{
         return temp
     }));
     res.json(report)
-
 })
+///////////////////line
+// const functions = require("firebase-functions");
+// const request = require("request-promise");
+  app.post('/api/test', (req, res) => {
+    const LINE_MESSAGING_API = 'https://api.line.me/v2/bot/message/push';
+    const LINE_HEADER = {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer {l/MKxHe5xVT1oqZd2/1Bnr7bcR3HTtEXvwlrcfasdzU+I0xfAkb6zpFd8TYuurWXx7/CYuU6fAkMshGXKzgDNvYiHFQPXm+PX6GyTBVqc4SEpMBfiP3i7XRXIYY41qGZTyE6JC+7rP36BijepfhP6AdB04t89/1O/w1cDnyilFU=}`
+    };
+    request({
+      method: `POST`,
+      uri: `${LINE_MESSAGING_API}`,
+      headers: LINE_HEADER,
+      body: JSON.stringify({
+        to: "Ud7876758fece09a64eee8d3b1030fe76",
+        messages: [{
+            type: "text",
+            text: "LINE \uDBC0\uDC84 x \uDBC0\uDCA4 Firebase"
+        }]
+    })
+  });
+  res.json("OK")
+});
+
+//////////////
+const request = require('request')
+app.post('/test', (req, res) => {
+    // let reply_token = req.body.events[0].replyToken
+    // let msg = req.body.events[0].message.text
+    reply()
+    res.sendStatus(200)
+})
+function reply() {
+    let headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer {l/MKxHe5xVT1oqZd2/1Bnr7bcR3HTtEXvwlrcfasdzU+I0xfAkb6zpFd8TYuurWXx7/CYuU6fAkMshGXKzgDNvYiHFQPXm+PX6GyTBVqc4SEpMBfiP3i7XRXIYY41qGZTyE6JC+7rP36BijepfhP6AdB04t89/1O/w1cDnyilFU=}'
+    }
+    let body = JSON.stringify({
+        to:'Ud7876758fece09a64eee8d3b1030fe76',
+        // replyToken: reply_token,
+        messages: [{
+            type: 'text',
+            text: "LINE"
+        }]
+    })
+    request.post({
+        url: 'https://api.line.me/v2/bot/message/reply',
+        headers: headers,
+        body: body
+    }, (err, res, body) => {
+        console.log('status = ' + res.statusCode);
+    });
+}
