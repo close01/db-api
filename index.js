@@ -111,36 +111,36 @@ app.put('/api/edit/user/:doc', (req, res) => {
 // });
 
 // เก็บใบลา
-// app.post('/api/post/leave',async (req,res) => {
+app.post('/api/post/leave',async (req,res) => {
 
-//     const newLeave = firestore.collection("leave").doc()
-//     const newLeaveRef = await newLeave.get()
+    const newLeave = firestore.collection("leave").doc()
+    const newLeaveRef = await newLeave.get()
 
-//     const dbL = {
+    const dbL = {
 
-//         userId: req.body.userId,
-//         leaveType: req.body.leaveType,
-//         reson: req.body.reson,
-//         startValue: req.body.startValue,
-//         endValue: req.body.endValue,
-//         status: req.body.status,
-//         dateStart:req.body.dateStart,
-//         dateEnd:req.body.dateEnd
-//     }
-//     await newLeave.set({
-//         id:newLeaveRef.id,
-//         userId:dbL.userId,
-//         leaveType:dbL.leaveType,
-//         reson:dbL.reson,
-//         startValue:dbL.startValue,
-//         endValue:dbL.endValue,
-//         status:dbL.status,
-//         dateStart:dbL.dateStart,
-//         dateEnd:dbL.dateEnd
-//     }),
+        userId: req.body.userId,
+        leaveType: req.body.leaveType,
+        reson: req.body.reson,
+        startValue: req.body.startValue,
+        endValue: req.body.endValue,
+        status: req.body.status,
+        dateStart:req.body.dateStart,
+        dateEnd:req.body.dateEnd
+    }
+    await newLeave.set({
+        id:newLeaveRef.id,
+        userId:dbL.userId,
+        leaveType:dbL.leaveType,
+        reson:dbL.reson,
+        startValue:dbL.startValue,
+        endValue:dbL.endValue,
+        status:dbL.status,
+        dateStart:dbL.dateStart,
+        dateEnd:dbL.dateEnd
+    }),
     
-//     res.json(dbL);
-// });
+    res.json(dbL);
+});
 //get ใบลา ตาม user หน้าstatus user ต้องการ uerId
 app.get('/api/get/leaveByUser/:doc', (req, res) => {
     let item = []
@@ -679,24 +679,32 @@ app.get('/report/leave',async (req,res) =>{
 
 //////////////
 const request = require('request')
-app.post('/api/post/leave',async (req,res) => {
-    const LINE_MESSAGING_API = 'https://api.line.me/v2/bot/message/push';
-    const LINE_HEADER = {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer {l/MKxHe5xVT1oqZd2/1Bnr7bcR3HTtEXvwlrcfasdzU+I0xfAkb6zpFd8TYuurWXx7/CYuU6fAkMshGXKzgDNvYiHFQPXm+PX6GyTBVqc4SEpMBfiP3i7XRXIYY41qGZTyE6JC+7rP36BijepfhP6AdB04t89/1O/w1cDnyilFU=}`
-    };
-    request({
-        method: `POST`,
-        uri: `${LINE_MESSAGING_API}`,
-        headers: LINE_HEADER,
-        body: JSON.stringify({
-          to: "Ud7876758fece09a64eee8d3b1030fe76",
-          messages: [{
-              type: "text",
-              text: "LINE \uDBC0\uDC84 x Leave"
-          }]
-      })
+app.post('/test', (req, res) => {
+    reply()
+    res.sendStatus(200)
+})
+function reply() {
+    let headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer {l/MKxHe5xVT1oqZd2/1Bnr7bcR3HTtEXvwlrcfasdzU+I0xfAkb6zpFd8TYuurWXx7/CYuU6fAkMshGXKzgDNvYiHFQPXm+PX6GyTBVqc4SEpMBfiP3i7XRXIYY41qGZTyE6JC+7rP36BijepfhP6AdB04t89/1O/w1cDnyilFU=}'
+    }
+    let body = JSON.stringify({
+        to:'Ud7876758fece09a64eee8d3b1030fe76',
+        messages: [{
+            type: 'text',
+            text: "LINE"
+        }]
+    })
+    request.post({
+        url: 'https://api.line.me/v2/bot/message/reply',
+        headers: headers,
+        body: body
+    }, (err, res, body) => {
+        console.log('status = ' + res.statusCode);
     });
+}
+app.post('/api/post/leave',async (req,res) => {
+    
     const newLeave = firestore.collection("leave").doc()
     const newLeaveRef = await newLeave.get()
 
