@@ -111,36 +111,36 @@ app.put('/api/edit/user/:doc', (req, res) => {
 // });
 
 // เก็บใบลา
-app.post('/api/post/leave',async (req,res) => {
+// app.post('/api/post/leave',async (req,res) => {
 
-    const newLeave = firestore.collection("leave").doc()
-    const newLeaveRef = await newLeave.get()
+//     const newLeave = firestore.collection("leave").doc()
+//     const newLeaveRef = await newLeave.get()
 
-    const dbL = {
+//     const dbL = {
 
-        userId: req.body.userId,
-        leaveType: req.body.leaveType,
-        reson: req.body.reson,
-        startValue: req.body.startValue,
-        endValue: req.body.endValue,
-        status: req.body.status,
-        dateStart:req.body.dateStart,
-        dateEnd:req.body.dateEnd
-    }
-    await newLeave.set({
-        id:newLeaveRef.id,
-        userId:dbL.userId,
-        leaveType:dbL.leaveType,
-        reson:dbL.reson,
-        startValue:dbL.startValue,
-        endValue:dbL.endValue,
-        status:dbL.status,
-        dateStart:dbL.dateStart,
-        dateEnd:dbL.dateEnd
-    }),
+//         userId: req.body.userId,
+//         leaveType: req.body.leaveType,
+//         reson: req.body.reson,
+//         startValue: req.body.startValue,
+//         endValue: req.body.endValue,
+//         status: req.body.status,
+//         dateStart:req.body.dateStart,
+//         dateEnd:req.body.dateEnd
+//     }
+//     await newLeave.set({
+//         id:newLeaveRef.id,
+//         userId:dbL.userId,
+//         leaveType:dbL.leaveType,
+//         reson:dbL.reson,
+//         startValue:dbL.startValue,
+//         endValue:dbL.endValue,
+//         status:dbL.status,
+//         dateStart:dbL.dateStart,
+//         dateEnd:dbL.dateEnd
+//     }),
     
-    res.json(dbL);
-});
+//     res.json(dbL);
+// });
 //get ใบลา ตาม user หน้าstatus user ต้องการ uerId
 app.get('/api/get/leaveByUser/:doc', (req, res) => {
     let item = []
@@ -680,8 +680,6 @@ app.get('/report/leave',async (req,res) =>{
 //////////////
 const request = require('request')
 app.post('/test', (req, res) => {
-    // let reply_token = req.body.events[0].replyToken
-    // let msg = req.body.events[0].message.text
     reply()
     res.sendStatus(200)
 })
@@ -692,7 +690,6 @@ function reply() {
     }
     let body = JSON.stringify({
         to:'Ud7876758fece09a64eee8d3b1030fe76',
-        // replyToken: reply_token,
         messages: [{
             type: 'text',
             text: "LINE"
@@ -706,3 +703,35 @@ function reply() {
         console.log('status = ' + res.statusCode);
     });
 }
+app.post('/api/post/leave',async (req,res) => {
+
+    reply()
+
+    const newLeave = firestore.collection("leave").doc()
+    const newLeaveRef = await newLeave.get()
+
+    const dbL = {
+
+        userId: req.body.userId,
+        leaveType: req.body.leaveType,
+        reson: req.body.reson,
+        startValue: req.body.startValue,
+        endValue: req.body.endValue,
+        status: req.body.status,
+        dateStart:req.body.dateStart,
+        dateEnd:req.body.dateEnd
+    }
+    await newLeave.set({
+        id:newLeaveRef.id,
+        userId:dbL.userId,
+        leaveType:dbL.leaveType,
+        reson:dbL.reson,
+        startValue:dbL.startValue,
+        endValue:dbL.endValue,
+        status:dbL.status,
+        dateStart:dbL.dateStart,
+        dateEnd:dbL.dateEnd
+    }),
+    
+    res.json(dbL);
+});
