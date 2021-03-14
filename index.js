@@ -349,12 +349,9 @@ app.delete('/api/delete/calendar/:doc', (req, res) => {
 //เก็บ เข้า-ออก
 app.post('/api/post/checkIn',async (req, res) => {
     const newCheck = firestore.collection("checkinout").doc()
-    // const newCheck = firestore.collection("checkinout")
     const newCheckRef = await newCheck.get()
 
     const inOut = {
-        // id:req.body.id,
-
         timeIn:req.body.timeIn,
         timeOut:req.body.timeOut,
         userId:req.body.userId,
@@ -362,9 +359,7 @@ app.post('/api/post/checkIn',async (req, res) => {
         dateGet:req.body.dateGet
     }
     await newCheck.set({ 
-    // firestore.collection("checkinout").doc("1").set({
         id:newCheckRef.id,
-        // id:inOut.id,
         timeIn:inOut.timeIn,
         timeOut:inOut.timeOut,
         userId:inOut.userId,
