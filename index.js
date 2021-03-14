@@ -273,6 +273,33 @@ app.post('/api/post/calendar', async (req, res) => {
         dateActivity: calender.dateActivity,
         date: calender.date
     });
+    const LINE_MESSAGING_API_USER = 'https://api.line.me/v2/bot/message/push';
+    const LINE_HEADER_USER = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer {dCibnFNR1wHpjpqf51ArFk+4bsUShozYw3QIFr0U1r2adBk+/aNGSdm738J6qqGt5elkLO4eBwlTZz0jdD40+rAG42fLo9sD8Mhb4YLpxNDD80OLTeQlWo8FAvJxald9klaVQ5ei/a9aDKPcLavD5AdB04t89/1O/w1cDnyilFU=}`
+      };
+    const staff = await firestore.collection('user').where('rank','==','Staff')
+    let idStaff = []
+    await staff.get().then(async function (snap) {
+        await snap.forEach(function (u) {
+            idStaff.push(u.data().userId)
+            console.log(idStaff);
+            return idStaff
+        });
+    })
+    request({
+        method: `POST`,
+        uri: `${LINE_MESSAGING_API_HR}`,
+        headers: LINE_HEADER_HR,
+        body: JSON.stringify({
+        //   to: "Ud7876758fece09a64eee8d3b1030fe76",
+        to: idStaff,
+          messages: [{
+              type: "text",
+              text: "A new event the calendar."
+          }]
+          })
+      });
     res.json(calender);
 });
 
@@ -590,84 +617,104 @@ app.get('/get/user',async (req,res) => {
     }));
     res.json(last)
 })
+///////////////////////report เข้าออก ที่ใช้ !!!!!!!!
 app.get('/get/user1/:doc',async (req,res) => {
     let m = moment("20210101") // 2021-01-01T00:00:00+07:00 yyyy-mm-dd
     let mNow = ""
     let mBack = ""
-    switch (req.params.doc) {
-        case 'มกราคม':
+    let mmyy = req.params.doc.split("S")
+    console.log(mmyy[1].toString());
+    switch (mmyy[1].toString()) {
+        case '2021':
+            m = m.add(0,'year')
+            break;
+        case '2022':
+            m = m.add(1,'year')
+            break;
+        case '2023':
+            m = m.add(2,'year')
+            break;
+        case '2024':
+            m = m.add(3,'year')
+            break;
+        case '2025':
+            m = m.add(4,'year')
+            break;
+    }
+    switch (mmyy[0].toString()) {
+        case 'January':
             mNow = m.format(),
             mBack = m.add(1, 'month').format();
             console.log(mNow);
             console.log(mBack);
             break;
-        case 'กุมภาพันธ์':
+        case 'February':
             mNow = m.add(1, 'month').format(),
             mBack = m.add(1, 'month').format();
             console.log(mNow);
             console.log(mBack);
             break;
-        case 'มีนาคม':
+        case 'March':
             mNow = m.add(2, 'month').format(),
             mBack = m.add(1, 'month').format();
             console.log(mNow);
             console.log(mBack);
             break;
-        case 'เมษายน':
+        case 'April':
             mNow = m.add(3, 'month').format(),
             mBack = m.add(1, 'month').format();
             console.log(mNow);
             console.log(mBack);
             break;
-        case 'พฤษภาคม':
+        case 'May':
             mNow = m.add(4, 'month').format(),
             mBack = m.add(1, 'month').format();
             console.log(mNow);
             console.log(mBack);
             break;
-        case 'มิถุนายน':
+        case 'June':
             mNow = m.add(5, 'month').format(),
             mBack = m.add(1, 'month').format();
             console.log(mNow);
             console.log(mBack);
             break;
-        case 'กรกฎาคม':
+        case 'July':
             mNow = m.add(6, 'month').format(),
             mBack = m.add(1, 'month').format();
             console.log(mNow);
             console.log(mBack);
             break;
-        case 'สิงหาคม':
+        case 'August':
             mNow = m.add(7, 'month').format(),
             mBack = m.add(1, 'month').format();
             console.log(mNow);
             console.log(mBack);
             break;
-        case 'กันยายน':
+        case 'September':
             mNow = m.add(8, 'month').format(),
             mBack = m.add(1, 'month').format();
             console.log(mNow);
             console.log(mBack);
             break;
-        case 'ตุลาคม':
+        case 'October':
             mNow = m.add(9, 'month').format(),
             mBack = m.add(1, 'month').format();
             console.log(mNow);
             console.log(mBack);
             break;
-        case 'พฤศจิกายน':
+        case 'November':
             mNow = m.add(10, 'month').format(),
             mBack = m.add(1, 'month').format();
             console.log(mNow);
             console.log(mBack);
             break;   
-        case 'ธันวาคม':
+        case 'December':
             mNow = m.add(11, 'month').format(),
             mBack = m.add(1, 'month').format();
             console.log(mNow);
             console.log(mBack);
             break; 
-        case 'ทั้งหมด':
+        case 'All':
             mNow = m.format(),
             mBack = m.add(12, 'month').format();
             console.log(mNow);
@@ -692,14 +739,42 @@ app.get('/get/user1/:doc',async (req,res) => {
     res.json(last)
 })
 //////
-app.get('/report/leave',async (req,res) =>{
+app.get('/report/leave/:doc',async (req,res) =>{
+    let y = moment("20210101") // 2021-01-01T00:00:00+07:00 yyyy-mm-dd
+    let yNow = ""
+    let yBack = ""
+    // let itema = []
+    // let itemb = []
+    // let a = 0
+    // let b = 0
 
-    let itema = []
-    let itemb = []
-    let a = 0
-    let b = 0
+    switch (req.params.doc) {
+        case '2021':
+            yNow = y.add(0,'year').format(),
+            yBack = y.add(1,'year').format();
+            break;
+        case '2022':
+            yNow = y.add(1,'year').format(),
+            yBack = y.add(1,'year').format();
+            break;
+        case '2023':
+            yNow = y.add(2,'year').format(),
+            yBack = y.add(1,'year').format();
+            break;
+        case '2024':
+            yNow = y.add(3,'year').format(),
+            yBack = y.add(1,'year').format();
+            break;
+        case '2025':
+            yNow = y.add(4,'year').format(),
+            yBack = y.add(1,'year').format();
+            break;
+    }
+
     const dbUser = await firestore.collection('user')
-    const dbLeave =await firestore.collection('leave').where('status','>','รออนุมัติ')
+    // const dbleavYear = await firestore.collection('leave').where("startValue",">=",yNow).where("startValue","<",yBack)
+    const dbLeave = await firestore.collection('leave').where("startValue",">=",yNow).where("startValue","<",yBack)
+    // const dbLeave = await await firestore.collection('leave').where('status','>','รออนุมัติ')
     const queryDBUserSnapshot = await dbUser.get()
     const dbUserDocs = queryDBUserSnapshot.docs.map(doc => doc.data());
 
@@ -713,7 +788,7 @@ app.get('/report/leave',async (req,res) =>{
 
         data['numApprove'] = result2.length
         data['numDisapproval'] = result4.length
-        const result = await dbLeave.where('userId',"==",data.userId).orderBy('status').get()
+        const result = await dbLeave.where('userId',"==",data.userId).orderBy('startValue').orderBy('status').get()
         const leave = result.docs.map(doc=> doc.data());
 
         data['leave'] = leave
