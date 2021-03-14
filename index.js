@@ -169,7 +169,7 @@ app.post('/api/post/leave',async (req,res) => {
           }]
           })
       });
-      request({
+      requestUser({
         method: `POST`,
         uri: `${LINE_MESSAGING_API_USER}`,
         headers: LINE_HEADER_USER,
