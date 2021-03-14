@@ -147,7 +147,7 @@ app.post('/api/post/leave',async (req,res) => {
         uri: `${LINE_MESSAGING_API}`,
         headers: LINE_HEADER,
         body: JSON.stringify({
-          to: "Ud7876758fece09a64eee8d3b1030fe76",
+        //   to: "Ud7876758fece09a64eee8d3b1030fe76",
           messages: [{
               type: "text",
               text: "LINE"
