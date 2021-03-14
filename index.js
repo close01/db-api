@@ -679,7 +679,7 @@ app.get('/report/leave',async (req,res) =>{
 
 //////////////
 const request = require('request')
-app.post('/test', (req, res) => {
+app.post('/test/test', (req, res) => {
     // let reply_token = req.body.events[0].replyToken
     // let msg = req.body.events[0].message.text
     reply()
