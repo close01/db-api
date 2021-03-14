@@ -131,7 +131,7 @@ app.post('/api/post/leave',async (req,res) => {
         await snap.forEach(function (u) {
             idHr.push(u.data().userId)
             console.log(idHr);
-            // return idHr
+            return idHr
         });
     })
     const dbL = {
@@ -275,8 +275,8 @@ app.post('/api/post/calendar', async (req, res) => {
     });
     const staff = await firestore.collection('user').where('rank','==','Staff')
     let idStaff = []
-    const LINE_MESSAGING_API_USER = 'https://api.line.me/v2/bot/message/multicast';
-    const LINE_HEADER_USER = {
+    const LINE_MESSAGING_API = 'https://api.line.me/v2/bot/message/multicast';
+    const LINE_HEADER = {
         'Content-Type': 'application/json',
         'Authorization': `Bearer {dCibnFNR1wHpjpqf51ArFk+4bsUShozYw3QIFr0U1r2adBk+/aNGSdm738J6qqGt5elkLO4eBwlTZz0jdD40+rAG42fLo9sD8Mhb4YLpxNDD80OLTeQlWo8FAvJxald9klaVQ5ei/a9aDKPcLavD5AdB04t89/1O/w1cDnyilFU=}`
       };
@@ -285,14 +285,14 @@ app.post('/api/post/calendar', async (req, res) => {
         await snap.forEach(function (u) {
             idStaff.push(u.data().userId)
             // console.log(idStaff);
-            // return idStaff
+            return idStaff
         });
     })
     console.log(idStaff);
     request({
         method: `POST`,
-        uri: `${LINE_MESSAGING_API_USER}`,
-        headers: LINE_HEADER_USER,
+        uri: `${LINE_MESSAGING_API}`,
+        headers: LINE_HEADER,
         body: JSON.stringify({
         //   to: "Ud7876758fece09a64eee8d3b1030fe76",
         to: idStaff,
@@ -302,6 +302,7 @@ app.post('/api/post/calendar', async (req, res) => {
           }]
           })
       });
+    //   console.log(idStaff);
     res.json(calender);
 });
 
