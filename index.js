@@ -169,7 +169,7 @@ app.post('/api/post/leave',async (req,res) => {
           }]
           })
       });
-      requestUser({
+      request({
         method: `POST`,
         uri: `${LINE_MESSAGING_API_USER}`,
         headers: LINE_HEADER_USER,
@@ -182,7 +182,6 @@ app.post('/api/post/leave',async (req,res) => {
           }]
           })
       });
-      console.log("sss",idHr);
     res.json(dbL);
 });
 //get ใบลา ตาม user หน้าstatus user ต้องการ uerId
