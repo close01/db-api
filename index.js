@@ -404,9 +404,11 @@ app.put('/api/update/checkout/:doc', (req,res) => {
     // res.json(updateOut)
     // });
     // console.log(Ref);
-    checkOut.where("timeOut","==","").get().then(function(snapshot){
-        snapshot.forEach(function(docs){    
-            Ref = docs.data().id
+    checkOut.get().then(function(snapshot){
+        snapshot.forEach(function(docs){ 
+            if(docs.data().checkOut == ""){
+                Ref = docs.data().id
+            } 
         }); 
     firestore.collection("checkinout").doc(Ref).update({
         timeOut:updateOut.timeOut
