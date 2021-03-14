@@ -234,9 +234,11 @@ app.put('/api/updateStatus/:doc',async (req,res) => {
         status: approve.status
     })
     
-    await firebase.collection("leave").doc(req.params.doc).get().then(function(docs){
+    await firestore.collection("leave").doc(req.params.doc).get().then(function(docs){
         idUser = docs.data().userId
+        console.log(idUser);
     })
+    console.log(idUser);
     request({
         method: `POST`,
         uri: `${LINE_MESSAGING_API_USER}`,
