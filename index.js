@@ -349,9 +349,12 @@ app.delete('/api/delete/calendar/:doc', (req, res) => {
 //เก็บ เข้า-ออก
 app.post('/api/post/checkIn',async (req, res) => {
     const newCheck = firestore.collection("checkinout").doc()
+    // const newCheck = firestore.collection("checkinout")
     const newCheckRef = await newCheck.get()
 
     const inOut = {
+        // id:req.body.id,
+
         timeIn:req.body.timeIn,
         timeOut:req.body.timeOut,
         userId:req.body.userId,
@@ -359,7 +362,9 @@ app.post('/api/post/checkIn',async (req, res) => {
         dateGet:req.body.dateGet
     }
     await newCheck.set({ 
+    // firestore.collection("checkinout").doc("1").set({
         id:newCheckRef.id,
+        // id:inOut.id,
         timeIn:inOut.timeIn,
         timeOut:inOut.timeOut,
         userId:inOut.userId,
@@ -385,25 +390,34 @@ app.get('/api/get/check/:doc', (req, res) => {
 
 //update status and timeout
 app.put('/api/update/checkout/:doc', (req,res) => {
-    const moment = require("moment");
-    const dateCheck = moment().format("l");
+    // const moment = require("moment");
+    // const dateCheck = moment().format("l");
     let Ref = ""
     const updateOut = {
         timeOut:req.body.timeOut
     }
-    const checkOut = firestore.collection("checkinout").where("userId","==",req.params.doc)
+    // const checkOut = firestore.collection("checkinout").where("userId","==",req.params.doc)
 
-    checkOut.where("dateGet","==",dateCheck).get().then(function(snapshot){
+    // checkOut.where("dateGet","==",dateCheck).get().then(function(snapshot){
+    //     snapshot.forEach(function(docs){    
+    //         Ref = docs.data().id
+    //     }); 
+    // // console.log("ref",Ref);
+    // firestore.collection("checkinout").doc(Ref).update({
+    //     timeOut:updateOut.timeOut
+    // });
+    // res.json(updateOut)
+    // });
+    console.log(Ref);
+    checkOut.where("timeOut","==","").get().then(function(snapshot){
         snapshot.forEach(function(docs){    
             Ref = docs.data().id
         }); 
-    console.log("ref",Ref);
     firestore.collection("checkinout").doc(Ref).update({
         timeOut:updateOut.timeOut
     });
     res.json(updateOut)
     });
-    console.log(Ref);
 });
 //get roport chack in out รายปี
 app.get('/api/get/report/chackinout/',async (req,res) =>{
