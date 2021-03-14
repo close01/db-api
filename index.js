@@ -150,7 +150,7 @@ app.post('/api/post/leave',async (req,res) => {
         //   to: "Ud7876758fece09a64eee8d3b1030fe76",
           messages: [{
               type: "text",
-              text: "LINE"
+              text: "Leave"
           }]
           })
       });
