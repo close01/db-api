@@ -302,7 +302,7 @@ app.post('/api/post/calendar', async (req, res) => {
           }]
           })
       });
-    // res.json(calender);
+    res.json(calender);
 });
 
 //แก้ไข calendar
