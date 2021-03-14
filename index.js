@@ -273,13 +273,14 @@ app.post('/api/post/calendar', async (req, res) => {
         dateActivity: calender.dateActivity,
         date: calender.date
     });
+    const staff = await firestore.collection('user').where('rank','==','Staff')
+    let idStaff = []
     const LINE_MESSAGING_API_USER = 'https://api.line.me/v2/bot/message/multicast';
     const LINE_HEADER_USER = {
         'Content-Type': 'application/json',
         'Authorization': `Bearer {dCibnFNR1wHpjpqf51ArFk+4bsUShozYw3QIFr0U1r2adBk+/aNGSdm738J6qqGt5elkLO4eBwlTZz0jdD40+rAG42fLo9sD8Mhb4YLpxNDD80OLTeQlWo8FAvJxald9klaVQ5ei/a9aDKPcLavD5AdB04t89/1O/w1cDnyilFU=}`
       };
-    const staff = await firestore.collection('user').where('rank','==','Staff')
-    let idStaff = []
+    
     await staff.get().then(async function (snap) {
         await snap.forEach(function (u) {
             idStaff.push(u.data().userId)
