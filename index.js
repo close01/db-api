@@ -174,11 +174,11 @@ app.post('/api/post/leave',async (req,res) => {
         uri: `${LINE_MESSAGING_API_USER}`,
         headers: LINE_HEADER_USER,
         body: JSON.stringify({
-          to: "Ud7876758fece09a64eee8d3b1030fe76",
+          to: dbL.userId,
         // to: idHr,
           messages: [{
               type: "text",
-              text: "You have a new message about a request for leave."
+              text: "You send a request for leave Successfully"
           }]
           })
       });
