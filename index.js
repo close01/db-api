@@ -116,7 +116,7 @@ app.post('/api/post/leave',async (req,res) => {
     const newLeave = firestore.collection("leave").doc()
     const newLeaveRef = await newLeave.get()
     let idHr = []
-    const hr = await firestore.collection('user').where('rank','===','Human Resource (HR)')
+    const hr = await firestore.collection('user').where('rank','==','Human Resource (HR)')
     const LINE_MESSAGING_API = 'https://api.line.me/v2/bot/message/push';
     const LINE_HEADER = {
       'Content-Type': 'application/json',
