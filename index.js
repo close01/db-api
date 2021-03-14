@@ -111,7 +111,7 @@ app.put('/api/edit/user/:doc', (req, res) => {
 // });
 
 // เก็บใบลา
-app.post('/api/post/leave01',async (req,res) => {
+app.post('/api/post/leave001',async (req,res) => {
 
     const newLeave = firestore.collection("leave").doc()
     const newLeaveRef = await newLeave.get()
