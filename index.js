@@ -289,8 +289,8 @@ app.post('/api/post/calendar', async (req, res) => {
     })
     request({
         method: `POST`,
-        uri: `${LINE_MESSAGING_API_HR}`,
-        headers: LINE_HEADER_HR,
+        uri: `${LINE_MESSAGING_API_USER}`,
+        headers: LINE_HEADER_USER,
         body: JSON.stringify({
         //   to: "Ud7876758fece09a64eee8d3b1030fe76",
         to: idStaff,
