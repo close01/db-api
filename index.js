@@ -131,7 +131,7 @@ app.post('/api/post/leave',async (req,res) => {
         await snap.forEach(function (u) {
             idHr.push(u.data().userId)
             console.log(idHr);
-            return idHr
+            // return idHr
         });
     })
     const dbL = {
@@ -284,10 +284,11 @@ app.post('/api/post/calendar', async (req, res) => {
     await staff.get().then(async function (snap) {
         await snap.forEach(function (u) {
             idStaff.push(u.data().userId)
-            console.log(idStaff);
-            return idStaff
+            // console.log(idStaff);
+            // return idStaff
         });
     })
+    console.log(idStaff);
     request({
         method: `POST`,
         uri: `${LINE_MESSAGING_API_USER}`,
@@ -301,7 +302,7 @@ app.post('/api/post/calendar', async (req, res) => {
           }]
           })
       });
-    res.json(calender);
+    // res.json(calender);
 });
 
 //แก้ไข calendar
