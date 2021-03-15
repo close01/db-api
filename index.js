@@ -1,7 +1,9 @@
 const express = require('express');
+const cors = require('cors')
 
 const app = express();
 app.use(express.json());
+app.use(cors()) // Use this after the variable declaration
 
 const port = process.env.PORT || 3303
 app.listen(port, () => console.log(`Listening on port${port}...`) );
@@ -32,7 +34,7 @@ let firestore = firebase.firestore()
 //       res.send("Hello Firebase Cloud Function!");
 //     }));
 //   });
-const cors = require('cors')
+
 // ({ origin: "*" })
 // const functions = require('firebase-functions');
 
@@ -46,7 +48,7 @@ const cors = require('cors')
 const moment = require('moment');
 const { urlencoded } = require('express');
 
-app.use(cors()) // Use this after the variable declaration
+
 
 //ดึงค่า profile User รายคนตาม id
 app.get('/api/get/user/:doc', (req, res) => {
