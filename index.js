@@ -339,7 +339,7 @@ app.post('/api/post/checkIn',async (req, res) => {
 
     const inOut = {
         timeIn:req.body.timeIn,
-        timeOut:"req.body.timeOut",
+        timeOut:req.body.timeOut,
         userId:req.body.userId,
         dateShow:req.body.dateShow,
         dateGet:req.body.dateGet
@@ -377,7 +377,7 @@ app.put('/api/update/checkout/:doc',(req,res) => {
     const updateOut = {
         timeOut:req.body.timeOut
     }
-    const checkOut = firestore.collection("checkinout").where("userId","==",req.params.doc).where("timeOut","==","req.body.timeOut")
+    const checkOut = firestore.collection("checkinout").where("userId","==",req.params.doc).where("timeOut","==","")
     // console.log(checkOut);
     // checkOut.where("dateGet","==",dateCheck).get().then(function(snapshot){
     //     snapshot.forEach(function(docs){    
