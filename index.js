@@ -370,25 +370,25 @@ app.get('/api/get/check/:doc', (req, res) => {
 });
 
 //update status and timeout
-app.put('/api/update/checkout/:doc', (req,res) => {
+app.put('/api/update/checkout/:doc',async (req,res) => {
     const moment = require("moment");
     const dateCheck = moment().format("l");
     let Ref = ""
     const updateOut = {
         timeOut:req.body.timeOut
     }
-    const checkOut = firestore.collection("checkinout").where("userId","==",req.params.doc)
+    const checkOut = await firestore.collection("checkinout").where("userId","==",req.params.doc)
 
     // checkOut.where("dateGet","==",dateCheck).get().then(function(snapshot){
     //     snapshot.forEach(function(docs){    
     //         Ref = docs.data().id
     //     }); 
-    checkOut.where("timeOut","==","").get().then(function(snapshot){
+    await checkOut.where("timeOut","==","").get().then(function(snapshot){
             snapshot.forEach(function(docs){    
                 Ref = docs.data().id
             }); 
-    console.log("ref",Ref);
-    firestore.collection("checkinout").doc(Ref).update({
+    // console.log("ref",Ref);
+    await firestore.collection("checkinout").doc(Ref).update({
         timeOut:updateOut.timeOut
     });
     res.json(updateOut)
