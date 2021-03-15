@@ -377,7 +377,7 @@ app.put('/api/update/checkout/:doc',async (req,res) => {
     const updateOut = {
         timeOut:req.body.timeOut
     }
-    const checkOut = await firestore.collection("checkinout").where("userId","==",req.params.doc)
+    const checkOut = firestore.collection("checkinout").where("userId","==",req.params.doc)
 
     // checkOut.where("dateGet","==",dateCheck).get().then(function(snapshot){
     //     snapshot.forEach(function(docs){    
