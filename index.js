@@ -383,15 +383,15 @@ app.put('/api/update/checkout/:doc',(req,res) => {
     //     snapshot.forEach(function(docs){    
     //         Ref = docs.data().id
     //     }); 
-    checkOut.where("timeOut","==","").get().then(function(snapshot){
+    checkOut.where("timeOut","==","").get().then(async function(snapshot){
             snapshot.forEach(function(docs){    
                 Ref = docs.data().id
             }); 
-    // console.log("ref",Ref);
-    firestore.collection("checkinout").doc(Ref).update({
+        // console.log("ref",Ref);
+        await firestore.collection("checkinout").doc(Ref).update({
         timeOut:updateOut.timeOut
-    });
-    res.json(updateOut)
+        });
+        res.json(updateOut)
     });
     console.log(Ref);
 });
