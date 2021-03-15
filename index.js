@@ -3,7 +3,7 @@ const express = require('express');
 const app = express();
 app.use(express.json());
 
-const port = process.env.PORT || 3303
+const port = process.env.PORT || 3305
 app.listen(port, () => console.log(`Listening on port${port}...`) );
 
 const firebase = require("firebase/app")
@@ -377,13 +377,13 @@ app.put('/api/update/checkout/:doc',(req,res) => {
     const updateOut = {
         timeOut:req.body.timeOut
     }
-    const checkOut = firestore.collection("checkinout").where("userId","==",req.params.doc)
-
+    const checkOut = firestore.collection("checkinout").where("userId","==",req.params.doc).where("timeOut","==","")
+    // console.log(checkOut);
     // checkOut.where("dateGet","==",dateCheck).get().then(function(snapshot){
     //     snapshot.forEach(function(docs){    
     //         Ref = docs.data().id
     //     }); 
-    checkOut.where("timeOut","==","").get().then(async function(snapshot){
+    checkOut.get().then(async function(snapshot){
             snapshot.forEach(function(docs){    
                 Ref = docs.data().id
             }); 
