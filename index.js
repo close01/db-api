@@ -215,10 +215,8 @@ app.get('/api/get/approve',async (req, res) => {
                 })
             })
             return item
-        }))
-       res.json(items); 
-    });
-    let idUser = ""
+        }));
+        let idUser = ""
         const LINE_MESSAGING_API_USER = 'https://api.line.me/v2/bot/message/push';
         const LINE_HEADER_USER = {
             'Content-Type': 'application/json',
@@ -237,6 +235,9 @@ app.get('/api/get/approve',async (req, res) => {
             }]
         })
     });
+       res.json(items); 
+    });
+    
 });
 //update status approve ส่งไอดีของใบลา
 app.put('/api/updateStatus/:doc', (req,res) => {
