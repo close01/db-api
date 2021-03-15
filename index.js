@@ -360,7 +360,7 @@ app.get('/api/get/check/:doc', (req, res) => {
     const dateCheck = moment().format("l");
     const newCheck = firestore.collection("checkinout").where("userId","==",req.params.doc)
     
-    newCheck.where("dateGet","==",dateCheck).get().then(function(snapshot){
+    newCheck.where("timeOut","==","").get().then(function(snapshot){
         snapshot.forEach(function(docs){
             res.json(docs.data())    
             console.log(docs.data().id);
@@ -378,11 +378,6 @@ app.put('/api/update/checkout/:doc',(req,res) => {
         timeOut:req.body.timeOut
     }
     const checkOut = firestore.collection("checkinout").where("userId","==",req.params.doc).where("timeOut","==","")
-    // console.log(checkOut);
-    // checkOut.where("dateGet","==",dateCheck).get().then(function(snapshot){
-    //     snapshot.forEach(function(docs){    
-    //         Ref = docs.data().id
-    //     }); 
     checkOut.get().then(async function(snapshot){
             snapshot.forEach(function(docs){    
                 Ref = docs.data().id
