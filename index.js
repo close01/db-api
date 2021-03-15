@@ -217,7 +217,13 @@ app.put('/api/updateStatus/:doc',async (req,res) => {
         idUser = docs.data().userId
         console.log(idUser);
     })
+    let idUser = ""
     console.log(idUser);
+    const LINE_MESSAGING_API_USER = 'https://api.line.me/v2/bot/message/push';
+    const LINE_HEADER_USER = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer {dCibnFNR1wHpjpqf51ArFk+4bsUShozYw3QIFr0U1r2adBk+/aNGSdm738J6qqGt5elkLO4eBwlTZz0jdD40+rAG42fLo9sD8Mhb4YLpxNDD80OLTeQlWo8FAvJxald9klaVQ5ei/a9aDKPcLavD5AdB04t89/1O/w1cDnyilFU=}`
+      };
     request({
         method: `POST`,
         uri: `${LINE_MESSAGING_API_USER}`,
