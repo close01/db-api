@@ -22,7 +22,17 @@ var config = {
 firebase.initializeApp(config);
 let firestore = firebase.firestore()
 
-var cors = require('cors');
+// var cors = require('cors');
+const cors = require('cors')({
+    origin: true
+  });
+  
+  exports.hellofirebase = functions.https.onRequest((req, res) => {
+    cors((req, res, () => {
+      res.send("Hello Firebase Cloud Function!");
+    }));
+  });
+
 const moment = require('moment');
 const { urlencoded } = require('express');
 
