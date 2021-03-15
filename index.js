@@ -732,7 +732,7 @@ app.get('/get/user1/:doc',async (req,res) => {
     res.json(last)
 })
 //////
-app.get('/report/leave',async (req,res) =>{
+app.get('/report/leave/:doc',async (req,res) =>{
     let y = moment("20210101") // 2021-01-01T00:00:00+07:00 yyyy-mm-dd
     let yNow = ""
     let yBack = ""
