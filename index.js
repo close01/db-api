@@ -1,9 +1,7 @@
 const express = require('express');
-const cors = require('cors')
 
 const app = express();
 app.use(express.json());
-app.use(cors()) // Use this after the variable declaration
 
 const port = process.env.PORT || 3303
 app.listen(port, () => console.log(`Listening on port${port}...`) );
@@ -24,31 +22,11 @@ var config = {
 firebase.initializeApp(config);
 let firestore = firebase.firestore()
 
-// var cors = require('cors');
-// const cors = require('cors')({
-//     origin: true
-//   });
-  
-//   exports.hellofirebase = functions.https.onRequest((req, res) => {
-//     cors((req, res, () => {
-//       res.send("Hello Firebase Cloud Function!");
-//     }));
-//   });
-
-// ({ origin: "*" })
-// const functions = require('firebase-functions');
-
-// exports.helloWorld = functions.https.onRequest((request, response) => {
-//     return cors()(request, response, () => {
-//       const name = request.body.friend.name;
-//       response.send(`Hello ${name} from Firebase!`);
-//     });
-//   });
-
+var cors = require('cors');
 const moment = require('moment');
-// const { urlencoded } = require('express');
+const { urlencoded } = require('express');
 
-
+app.use(cors()) // Use this after the variable declaration
 
 //ดึงค่า profile User รายคนตาม id
 app.get('/api/get/user/:doc', (req, res) => {
@@ -137,25 +115,7 @@ app.post('/api/post/leave',async (req,res) => {
 
     const newLeave = firestore.collection("leave").doc()
     const newLeaveRef = await newLeave.get()
-    let idHr = []
-    const hr = await firestore.collection('user').where('rank','==','Human Resource (HR)')
-    const LINE_MESSAGING_API_USER = 'https://api.line.me/v2/bot/message/push';
-    const LINE_HEADER_USER = {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer {dCibnFNR1wHpjpqf51ArFk+4bsUShozYw3QIFr0U1r2adBk+/aNGSdm738J6qqGt5elkLO4eBwlTZz0jdD40+rAG42fLo9sD8Mhb4YLpxNDD80OLTeQlWo8FAvJxald9klaVQ5ei/a9aDKPcLavD5AdB04t89/1O/w1cDnyilFU=}`
-      };
-    const LINE_MESSAGING_API_HR = 'https://api.line.me/v2/bot/message/multicast';
-    const LINE_HEADER_HR = {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer {l/MKxHe5xVT1oqZd2/1Bnr7bcR3HTtEXvwlrcfasdzU+I0xfAkb6zpFd8TYuurWXx7/CYuU6fAkMshGXKzgDNvYiHFQPXm+PX6GyTBVqc4SEpMBfiP3i7XRXIYY41qGZTyE6JC+7rP36BijepfhP6AdB04t89/1O/w1cDnyilFU=}`
-    };
-    await hr.get().then(async function (snap) {
-        await snap.forEach(function (u) {
-            idHr.push(u.data().userId)
-            console.log(idHr);
-            return idHr
-        });
-    })
+
     const dbL = {
 
         userId: req.body.userId,
@@ -178,32 +138,7 @@ app.post('/api/post/leave',async (req,res) => {
         dateStart:dbL.dateStart,
         dateEnd:dbL.dateEnd
     }),
-    request({
-        method: `POST`,
-        uri: `${LINE_MESSAGING_API_HR}`,
-        headers: LINE_HEADER_HR,
-        body: JSON.stringify({
-        //   to: "Ud7876758fece09a64eee8d3b1030fe76",
-        to: idHr,
-          messages: [{
-              type: "text",
-              text: "You have a new message about a request for leave."
-          }]
-          })
-      });
-      request({
-        method: `POST`,
-        uri: `${LINE_MESSAGING_API_USER}`,
-        headers: LINE_HEADER_USER,
-        body: JSON.stringify({
-          to: dbL.userId,
-        // to: idHr,
-          messages: [{
-              type: "text",
-              text: "You send a request for leave Successfully"
-          }]
-          })
-      });
+    
     res.json(dbL);
 });
 //get ใบลา ตาม user หน้าstatus user ต้องการ uerId
@@ -237,43 +172,17 @@ app.get('/api/get/approve',async (req, res) => {
             })
             return item
         }))
-
-        res.json(items); 
+       res.json(items); 
     });
 });
 //update status approve ส่งไอดีของใบลา
-app.put('/api/updateStatus/:doc',async (req,res) => {
-    let idUser = ""
-    const LINE_MESSAGING_API_USER = 'https://api.line.me/v2/bot/message/push';
-    const LINE_HEADER_USER = {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer {dCibnFNR1wHpjpqf51ArFk+4bsUShozYw3QIFr0U1r2adBk+/aNGSdm738J6qqGt5elkLO4eBwlTZz0jdD40+rAG42fLo9sD8Mhb4YLpxNDD80OLTeQlWo8FAvJxald9klaVQ5ei/a9aDKPcLavD5AdB04t89/1O/w1cDnyilFU=}`
-      };
+app.put('/api/updateStatus/:doc', (req,res) => {
     const approve = {
         status: req.body.status
     }
-    await firestore.collection("leave").doc(req.params.doc).update({
+    firestore.collection("leave").doc(req.params.doc).update({
         status: approve.status
     })
-    
-    await firestore.collection("leave").doc(req.params.doc).get().then(function(docs){
-        idUser = docs.data().userId
-        console.log(idUser);
-    })
-    console.log(idUser);
-    request({
-        method: `POST`,
-        uri: `${LINE_MESSAGING_API_USER}`,
-        headers: LINE_HEADER_USER,
-        body: JSON.stringify({
-          to: idUser,
-        // to: idHr,
-          messages: [{
-              type: "text",
-              text: "The status of your leave request is updated."
-          }]
-          })
-      });
     res.json(approve)
 })
 
@@ -295,36 +204,6 @@ app.post('/api/post/calendar', async (req, res) => {
         dateActivity: calender.dateActivity,
         date: calender.date
     });
-    const staff = await firestore.collection('user').where('rank','==','Staff')
-    let idStaff = []
-    const LINE_MESSAGING_API = 'https://api.line.me/v2/bot/message/multicast';
-    const LINE_HEADER = {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer {dCibnFNR1wHpjpqf51ArFk+4bsUShozYw3QIFr0U1r2adBk+/aNGSdm738J6qqGt5elkLO4eBwlTZz0jdD40+rAG42fLo9sD8Mhb4YLpxNDD80OLTeQlWo8FAvJxald9klaVQ5ei/a9aDKPcLavD5AdB04t89/1O/w1cDnyilFU=}`
-      };
-    
-    await staff.get().then(async function (snap) {
-        await snap.forEach(function (u) {
-            idStaff.push(u.data().userId)
-            // console.log(idStaff);
-            return idStaff
-        });
-    })
-    console.log(idStaff);
-    request({
-        method: `POST`,
-        uri: `${LINE_MESSAGING_API}`,
-        headers: LINE_HEADER,
-        body: JSON.stringify({
-        //   to: "Ud7876758fece09a64eee8d3b1030fe76",
-        to: idStaff,
-          messages: [{
-              type: "text",
-              text: "A new event the calendar."
-          }]
-          })
-      });
-    //   console.log(idStaff);
     res.json(calender);
 });
 
@@ -406,37 +285,26 @@ app.get('/api/get/check/:doc', (req, res) => {
 });
 
 //update status and timeout
-app.put('/api/update/checkout/:doc',async (req,res) => {
-    // const moment = require("moment");
-    // const dateCheck = moment().format("l");
+app.put('/api/update/checkout/:doc', (req,res) => {
+    const moment = require("moment");
+    const dateCheck = moment().format("l");
     let Ref = ""
     const updateOut = {
         timeOut:req.body.timeOut
     }
-    const checkOut = await firestore.collection("checkinout").where("userId","==",req.params.doc)
+    const checkOut = firestore.collection("checkinout").where("userId","==",req.params.doc)
 
-    // checkOut.where("dateGet","==",dateCheck).get().then(function(snapshot){
-    //     snapshot.forEach(function(docs){    
-    //         Ref = docs.data().id
-    //     }); 
-    // // console.log("ref",Ref);
-    // firestore.collection("checkinout").doc(Ref).update({
-    //     timeOut:updateOut.timeOut
-    // });
-    // res.json(updateOut)
-    // });
-    // console.log(Ref);
-    await checkOut.get().then(function(snapshot){
-        snapshot.forEach(function(docs){ 
-            if(docs.data().checkOut == ""){
-                Ref = docs.data().id
-            } 
+    checkOut.where("dateGet","==",dateCheck).get().then(function(snapshot){
+        snapshot.forEach(function(docs){    
+            Ref = docs.data().id
         }); 
-    await firestore.collection("checkinout").doc(Ref).update({
+    console.log("ref",Ref);
+    firestore.collection("checkinout").doc(Ref).update({
         timeOut:updateOut.timeOut
     });
     res.json(updateOut)
     });
+    console.log(Ref);
 });
 //get roport chack in out รายปี
 app.get('/api/get/report/chackinout/',async (req,res) =>{
@@ -653,104 +521,84 @@ app.get('/get/user',async (req,res) => {
     }));
     res.json(last)
 })
-///////////////////////report เข้าออก ที่ใช้ !!!!!!!!
 app.get('/get/user1/:doc',async (req,res) => {
     let m = moment("20210101") // 2021-01-01T00:00:00+07:00 yyyy-mm-dd
     let mNow = ""
     let mBack = ""
-    let mmyy = req.params.doc.split("S")
-    console.log(mmyy[1].toString());
-    switch (mmyy[1].toString()) {
-        case '2021':
-            m = m.add(0,'year')
-            break;
-        case '2022':
-            m = m.add(1,'year')
-            break;
-        case '2023':
-            m = m.add(2,'year')
-            break;
-        case '2024':
-            m = m.add(3,'year')
-            break;
-        case '2025':
-            m = m.add(4,'year')
-            break;
-    }
-    switch (mmyy[0].toString()) {
-        case 'January':
+    switch (req.params.doc) {
+        case 'มกราคม':
             mNow = m.format(),
             mBack = m.add(1, 'month').format();
             console.log(mNow);
             console.log(mBack);
             break;
-        case 'February':
+        case 'กุมภาพันธ์':
             mNow = m.add(1, 'month').format(),
             mBack = m.add(1, 'month').format();
             console.log(mNow);
             console.log(mBack);
             break;
-        case 'March':
+        case 'มีนาคม':
             mNow = m.add(2, 'month').format(),
             mBack = m.add(1, 'month').format();
             console.log(mNow);
             console.log(mBack);
             break;
-        case 'April':
+        case 'เมษายน':
             mNow = m.add(3, 'month').format(),
             mBack = m.add(1, 'month').format();
             console.log(mNow);
             console.log(mBack);
             break;
-        case 'May':
+        case 'พฤษภาคม':
             mNow = m.add(4, 'month').format(),
             mBack = m.add(1, 'month').format();
             console.log(mNow);
             console.log(mBack);
             break;
-        case 'June':
+        case 'มิถุนายน':
             mNow = m.add(5, 'month').format(),
             mBack = m.add(1, 'month').format();
             console.log(mNow);
             console.log(mBack);
             break;
-        case 'July':
+        case 'กรกฎาคม':
             mNow = m.add(6, 'month').format(),
             mBack = m.add(1, 'month').format();
             console.log(mNow);
             console.log(mBack);
             break;
-        case 'August':
+        case 'สิงหาคม':
             mNow = m.add(7, 'month').format(),
             mBack = m.add(1, 'month').format();
             console.log(mNow);
             console.log(mBack);
             break;
-        case 'September':
+        case 'กันยายน':
             mNow = m.add(8, 'month').format(),
             mBack = m.add(1, 'month').format();
             console.log(mNow);
             console.log(mBack);
             break;
-        case 'October':
+        case 'ตุลาคม':
             mNow = m.add(9, 'month').format(),
             mBack = m.add(1, 'month').format();
             console.log(mNow);
             console.log(mBack);
             break;
-        case 'November':
+        case 'พฤศจิกายน':
             mNow = m.add(10, 'month').format(),
             mBack = m.add(1, 'month').format();
             console.log(mNow);
             console.log(mBack);
             break;   
-        case 'December':
+        case 'ธันวาคม':
             mNow = m.add(11, 'month').format(),
             mBack = m.add(1, 'month').format();
             console.log(mNow);
             console.log(mBack);
             break; 
-        case 'All':
+        case 'ทั้งหมด':
             mNow = m.format(),
             mBack = m.add(12, 'month').format();
             console.log(mNow);
@@ -775,42 +623,14 @@ app.get('/get/user1/:doc',async (req,res) => {
     res.json(last)
 })
 //////
-app.get('/report/leave/:doc',async (req,res) =>{
-    let y = moment("20210101") // 2021-01-01T00:00:00+07:00 yyyy-mm-dd
-    let yNow = ""
-    let yBack = ""
-    // let itema = []
-    // let itemb = []
-    // let a = 0
-    // let b = 0
+app.get('/report/leave',async (req,res) =>{
 
-    switch (req.params.doc) {
-        case '2021':
-            yNow = y.add(0,'year').format(),
-            yBack = y.add(1,'year').format();
-            break;
-        case '2022':
-            yNow = y.add(1,'year').format(),
-            yBack = y.add(1,'year').format();
-            break;
-        case '2023':
-            yNow = y.add(2,'year').format(),
-            yBack = y.add(1,'year').format();
-            break;
-        case '2024':
-            yNow = y.add(3,'year').format(),
-            yBack = y.add(1,'year').format();
-            break;
-        case '2025':
-            yNow = y.add(4,'year').format(),
-            yBack = y.add(1,'year').format();
-            break;
-    }
-
+    let itema = []
+    let itemb = []
+    let a = 0
+    let b = 0
     const dbUser = await firestore.collection('user')
-    // const dbleavYear = await firestore.collection('leave').where("startValue",">=",yNow).where("startValue","<",yBack)
-    const dbLeave = await firestore.collection('leave').where("startValue",">=",yNow).where("startValue","<",yBack)
-    // const dbLeave = await await firestore.collection('leave').where('status','>','รออนุมัติ')
+    const dbLeave =await firestore.collection('leave').where('status','>','รออนุมัติ')
     const queryDBUserSnapshot = await dbUser.get()
     const dbUserDocs = queryDBUserSnapshot.docs.map(doc => doc.data());
 
@@ -824,7 +644,7 @@ app.get('/report/leave/:doc',async (req,res) =>{
 
         data['numApprove'] = result2.length
         data['numDisapproval'] = result4.length
-        const result = await dbLeave.where('userId',"==",data.userId).orderBy('startValue').orderBy('status').get()
+        const result = await dbLeave.where('userId',"==",data.userId).orderBy('status').get()
         const leave = result.docs.map(doc=> doc.data());
 
         data['leave'] = leave
@@ -852,10 +672,37 @@ app.get('/report/leave/:doc',async (req,res) =>{
             type: "text",
             text: "LINE \uDBC0\uDC84 x \uDBC0\uDCA4 Firebase"
         }]
-        })
-    });
+    })
+  });
   res.json("OK")
 });
 
 //////////////
 const request = require('request')
+app.post('/test', (req, res) => {
+    // let reply_token = req.body.events[0].replyToken
+    // let msg = req.body.events[0].message.text
+    reply()
+    res.sendStatus(200)
+})
+function reply() {
+    let headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer {l/MKxHe5xVT1oqZd2/1Bnr7bcR3HTtEXvwlrcfasdzU+I0xfAkb6zpFd8TYuurWXx7/CYuU6fAkMshGXKzgDNvYiHFQPXm+PX6GyTBVqc4SEpMBfiP3i7XRXIYY41qGZTyE6JC+7rP36BijepfhP6AdB04t89/1O/w1cDnyilFU=}'
+    }
+    let body = JSON.stringify({
+        to:'Ud7876758fece09a64eee8d3b1030fe76',
+        // replyToken: reply_token,
+        messages: [{
+            type: 'text',
+            text: "LINE"
+        }]
+    })
+    request.post({
+        url: 'https://api.line.me/v2/bot/message/reply',
+        headers: headers,
+        body: body
+    }, (err, res, body) => {
+        console.log('status = ' + res.statusCode);
+    });
+}
