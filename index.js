@@ -210,7 +210,7 @@ app.put('/api/updateStatus/:doc',async (req,res) => {
     const approve = {
         status: req.body.status
     }
-    await firestore.collection("leave").doc(req.params.doc).update({
+    firestore.collection("leave").doc(req.params.doc).update({
         status: approve.status
     })
     await firestore.collection("leave").doc(req.params.doc).get().then(function(docs){
