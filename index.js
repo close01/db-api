@@ -610,7 +610,7 @@ app.get('/get/user1/:doc',async (req,res) => {
     let m = moment("20210101") // 2021-01-01T00:00:00+07:00 yyyy-mm-dd
     let mNow = ""
     let mBack = ""
-    let mmyy = req.params.doc.split("S")
+    let mmyy = req.params.doc.split("S")//dd S yyyy
     // console.log(mmyy[1].toString());
     switch (mmyy[1].toString()) {
         case '2021':
@@ -719,7 +719,6 @@ app.get('/get/user1/:doc',async (req,res) => {
             const result = await dbinout.where('userId','==', data.userId)
             .where("dateShow",">=",mNow).where("dateShow","<",mBack).orderBy('dateShow').get()
             const inout = result.docs.map(doc => doc.data());
-
             data['inout'] = inout
 
             return temp
