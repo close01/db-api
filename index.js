@@ -22,15 +22,23 @@ var config = {
 firebase.initializeApp(config);
 let firestore = firebase.firestore()
 
-// var cors = require('cors');
-const cors = require('cors')({
-    origin: true
-  });
+var cors = require('cors');
+// const cors = require('cors')({
+//     origin: true
+//   });
   
-  exports.hellofirebase = functions.https.onRequest((req, res) => {
-    cors((req, res, () => {
-      res.send("Hello Firebase Cloud Function!");
-    }));
+//   exports.hellofirebase = functions.https.onRequest((req, res) => {
+//     cors((req, res, () => {
+//       res.send("Hello Firebase Cloud Function!");
+//     }));
+//   });
+const functions = require('firebase-functions');
+
+exports.helloWorld = functions.https.onRequest((request, response) => {
+    return cors()(request, response, () => {
+      const name = request.body.friend.name;
+      response.send(`Hello ${name} from Firebase!`);
+    });
   });
 
 const moment = require('moment');
