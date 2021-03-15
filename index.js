@@ -370,7 +370,7 @@ app.get('/api/get/check/:doc', (req, res) => {
 });
 
 //update status and timeout
-app.put('/api/update/checkout/:doc',async (req,res) => {
+app.put('/api/update/checkout/:doc',(req,res) => {
     const moment = require("moment");
     const dateCheck = moment().format("l");
     let Ref = ""
@@ -383,12 +383,12 @@ app.put('/api/update/checkout/:doc',async (req,res) => {
     //     snapshot.forEach(function(docs){    
     //         Ref = docs.data().id
     //     }); 
-    await checkOut.where("timeOut","==","").get().then(function(snapshot){
+    checkOut.where("timeOut","==","").get().then(function(snapshot){
             snapshot.forEach(function(docs){    
                 Ref = docs.data().id
             }); 
     // console.log("ref",Ref);
-    await firestore.collection("checkinout").doc(Ref).update({
+    firestore.collection("checkinout").doc(Ref).update({
         timeOut:updateOut.timeOut
     });
     res.json(updateOut)
