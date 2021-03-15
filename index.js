@@ -222,12 +222,36 @@ app.get('/api/get/approve',async (req, res) => {
 });
 //update status approve ส่งไอดีของใบลา
 app.put('/api/updateStatus/:doc', (req,res) => {
+    let idUser = ""
+    const LINE_MESSAGING_API_USER = 'https://api.line.me/v2/bot/message/push';
+    const LINE_HEADER_USER = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer {dCibnFNR1wHpjpqf51ArFk+4bsUShozYw3QIFr0U1r2adBk+/aNGSdm738J6qqGt5elkLO4eBwlTZz0jdD40+rAG42fLo9sD8Mhb4YLpxNDD80OLTeQlWo8FAvJxald9klaVQ5ei/a9aDKPcLavD5AdB04t89/1O/w1cDnyilFU=}`
+      };
     const approve = {
         status: req.body.status
     }
     firestore.collection("leave").doc(req.params.doc).update({
         status: approve.status
     })
+    await firestore.collection("leave").doc(req.params.doc).get().then(function(docs){
+        idUser = docs.data().userId
+        console.log(idUser);
+    })
+    console.log(idUser);
+    request({
+        method: `POST`,
+        uri: `${LINE_MESSAGING_API_USER}`,
+        headers: LINE_HEADER_USER,
+        body: JSON.stringify({
+          to: idUser,
+        // to: idHr,
+          messages: [{
+              type: "text",
+              text: "The status of your leave request is updated."
+          }]
+          })
+      });
     res.json(approve)
 })
 
