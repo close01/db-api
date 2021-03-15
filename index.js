@@ -22,7 +22,7 @@ var config = {
 firebase.initializeApp(config);
 let firestore = firebase.firestore()
 
-var cors = require('cors');
+// var cors = require('cors');
 // const cors = require('cors')({
 //     origin: true
 //   });
@@ -32,17 +32,18 @@ var cors = require('cors');
 //       res.send("Hello Firebase Cloud Function!");
 //     }));
 //   });
-const functions = require('firebase-functions');
+const cors = require('cors')({ origin: "*" })
+// const functions = require('firebase-functions');
 
-exports.helloWorld = functions.https.onRequest((request, response) => {
-    return cors()(request, response, () => {
-      const name = request.body.friend.name;
-      response.send(`Hello ${name} from Firebase!`);
-    });
-  });
+// exports.helloWorld = functions.https.onRequest((request, response) => {
+//     return cors()(request, response, () => {
+//       const name = request.body.friend.name;
+//       response.send(`Hello ${name} from Firebase!`);
+//     });
+//   });
 
-const moment = require('moment');
-const { urlencoded } = require('express');
+// const moment = require('moment');
+// const { urlencoded } = require('express');
 
 app.use(cors()) // Use this after the variable declaration
 
