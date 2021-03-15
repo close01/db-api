@@ -379,10 +379,14 @@ app.put('/api/update/checkout/:doc', (req,res) => {
     }
     const checkOut = firestore.collection("checkinout").where("userId","==",req.params.doc)
 
-    checkOut.where("dateGet","==",dateCheck).get().then(function(snapshot){
-        snapshot.forEach(function(docs){    
-            Ref = docs.data().id
-        }); 
+    // checkOut.where("dateGet","==",dateCheck).get().then(function(snapshot){
+    //     snapshot.forEach(function(docs){    
+    //         Ref = docs.data().id
+    //     }); 
+    checkOut.where("timeOut","==","").get().then(function(snapshot){
+            snapshot.forEach(function(docs){    
+                Ref = docs.data().id
+            }); 
     console.log("ref",Ref);
     firestore.collection("checkinout").doc(Ref).update({
         timeOut:updateOut.timeOut
@@ -606,84 +610,104 @@ app.get('/get/user',async (req,res) => {
     }));
     res.json(last)
 })
+//////////////////report in out
 app.get('/get/user1/:doc',async (req,res) => {
     let m = moment("20210101") // 2021-01-01T00:00:00+07:00 yyyy-mm-dd
     let mNow = ""
     let mBack = ""
-    switch (req.params.doc) {
-        case 'มกราคม':
+    let mmyy = req.params.doc.split("S")
+    // console.log(mmyy[1].toString());
+    switch (mmyy[1].toString()) {
+        case '2021':
+            m = m.add(0,'year')
+            break;
+        case '2022':
+            m = m.add(1,'year')
+            break;
+        case '2023':
+            m = m.add(2,'year')
+            break;
+        case '2024':
+            m = m.add(3,'year')
+            break;
+        case '2025':
+            m = m.add(4,'year')
+            break;
+    }
+    switch (mmyy[0].toString()) {
+        case 'January':
             mNow = m.format(),
             mBack = m.add(1, 'month').format();
             console.log(mNow);
             console.log(mBack);
             break;
-        case 'กุมภาพันธ์':
+        case 'February':
             mNow = m.add(1, 'month').format(),
             mBack = m.add(1, 'month').format();
             console.log(mNow);
             console.log(mBack);
             break;
-        case 'มีนาคม':
+        case 'March':
             mNow = m.add(2, 'month').format(),
             mBack = m.add(1, 'month').format();
             console.log(mNow);
             console.log(mBack);
             break;
-        case 'เมษายน':
+        case 'April':
             mNow = m.add(3, 'month').format(),
             mBack = m.add(1, 'month').format();
             console.log(mNow);
             console.log(mBack);
             break;
-        case 'พฤษภาคม':
+        case 'May':
             mNow = m.add(4, 'month').format(),
             mBack = m.add(1, 'month').format();
             console.log(mNow);
             console.log(mBack);
             break;
-        case 'มิถุนายน':
+        case 'June':
             mNow = m.add(5, 'month').format(),
             mBack = m.add(1, 'month').format();
             console.log(mNow);
             console.log(mBack);
             break;
-        case 'กรกฎาคม':
+        case 'July':
             mNow = m.add(6, 'month').format(),
             mBack = m.add(1, 'month').format();
             console.log(mNow);
             console.log(mBack);
             break;
-        case 'สิงหาคม':
+        case 'August':
             mNow = m.add(7, 'month').format(),
             mBack = m.add(1, 'month').format();
             console.log(mNow);
             console.log(mBack);
             break;
-        case 'กันยายน':
+        case 'September':
             mNow = m.add(8, 'month').format(),
             mBack = m.add(1, 'month').format();
             console.log(mNow);
             console.log(mBack);
             break;
-        case 'ตุลาคม':
+        case 'October':
             mNow = m.add(9, 'month').format(),
             mBack = m.add(1, 'month').format();
             console.log(mNow);
             console.log(mBack);
             break;
-        case 'พฤศจิกายน':
+        case 'November':
             mNow = m.add(10, 'month').format(),
             mBack = m.add(1, 'month').format();
             console.log(mNow);
             console.log(mBack);
             break;   
-        case 'ธันวาคม':
+        case 'December':
             mNow = m.add(11, 'month').format(),
             mBack = m.add(1, 'month').format();
             console.log(mNow);
             console.log(mBack);
             break; 
-        case 'ทั้งหมด':
+        case 'All':
             mNow = m.format(),
             mBack = m.add(12, 'month').format();
             console.log(mNow);
@@ -709,13 +733,41 @@ app.get('/get/user1/:doc',async (req,res) => {
 })
 //////
 app.get('/report/leave',async (req,res) =>{
+    let y = moment("20210101") // 2021-01-01T00:00:00+07:00 yyyy-mm-dd
+    let yNow = ""
+    let yBack = ""
+    // let itema = []
+    // let itemb = []
+    // let a = 0
+    // let b = 0
 
-    let itema = []
-    let itemb = []
-    let a = 0
-    let b = 0
+    switch (req.params.doc) {
+        case '2021':
+            yNow = y.add(0,'year').format(),
+            yBack = y.add(1,'year').format();
+            break;
+        case '2022':
+            yNow = y.add(1,'year').format(),
+            yBack = y.add(1,'year').format();
+            break;
+        case '2023':
+            yNow = y.add(2,'year').format(),
+            yBack = y.add(1,'year').format();
+            break;
+        case '2024':
+            yNow = y.add(3,'year').format(),
+            yBack = y.add(1,'year').format();
+            break;
+        case '2025':
+            yNow = y.add(4,'year').format(),
+            yBack = y.add(1,'year').format();
+            break;
+    }
+
     const dbUser = await firestore.collection('user')
-    const dbLeave =await firestore.collection('leave').where('status','>','รออนุมัติ')
+    // const dbleavYear = await firestore.collection('leave').where("startValue",">=",yNow).where("startValue","<",yBack)
+    const dbLeave = await firestore.collection('leave').where("startValue",">=",yNow).where("startValue","<",yBack)
+    // const dbLeave = await await firestore.collection('leave').where('status','>','รออนุมัติ')
     const queryDBUserSnapshot = await dbUser.get()
     const dbUserDocs = queryDBUserSnapshot.docs.map(doc => doc.data());
 
@@ -729,7 +781,7 @@ app.get('/report/leave',async (req,res) =>{
 
         data['numApprove'] = result2.length
         data['numDisapproval'] = result4.length
-        const result = await dbLeave.where('userId',"==",data.userId).orderBy('status').get()
+        const result = await dbLeave.where('userId',"==",data.userId).orderBy('startValue').orderBy('status').get()
         const leave = result.docs.map(doc=> doc.data());
 
         data['leave'] = leave
@@ -791,3 +843,4 @@ function reply() {
         console.log('status = ' + res.statusCode);
     });
 }
+///////////////////////////////////////////////////////////////
