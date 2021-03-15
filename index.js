@@ -32,7 +32,8 @@ let firestore = firebase.firestore()
 //       res.send("Hello Firebase Cloud Function!");
 //     }));
 //   });
-const cors = require('cors')({ origin: "*" })
+const cors = require('cors')
+// ({ origin: "*" })
 // const functions = require('firebase-functions');
 
 // exports.helloWorld = functions.https.onRequest((request, response) => {
