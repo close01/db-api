@@ -115,7 +115,7 @@ app.post('/api/post/leave',async (req,res) => {
 
     const newLeave = firestore.collection("leave").doc()
     const newLeaveRef = await newLeave.get()
-
+    
     const dbL = {
 
         userId: req.body.userId,
@@ -137,8 +137,52 @@ app.post('/api/post/leave',async (req,res) => {
         status:dbL.status,
         dateStart:dbL.dateStart,
         dateEnd:dbL.dateEnd
-    }),
-    
+    });
+    let idHr = []
+    const hr = await firestore.collection('user').where('rank','==','Human Resource (HR)')
+    const LINE_MESSAGING_API_USER = 'https://api.line.me/v2/bot/message/push';
+    const LINE_HEADER_USER = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer {dCibnFNR1wHpjpqf51ArFk+4bsUShozYw3QIFr0U1r2adBk+/aNGSdm738J6qqGt5elkLO4eBwlTZz0jdD40+rAG42fLo9sD8Mhb4YLpxNDD80OLTeQlWo8FAvJxald9klaVQ5ei/a9aDKPcLavD5AdB04t89/1O/w1cDnyilFU=}`
+      };
+    const LINE_MESSAGING_API_HR = 'https://api.line.me/v2/bot/message/multicast';
+    const LINE_HEADER_HR = {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer {l/MKxHe5xVT1oqZd2/1Bnr7bcR3HTtEXvwlrcfasdzU+I0xfAkb6zpFd8TYuurWXx7/CYuU6fAkMshGXKzgDNvYiHFQPXm+PX6GyTBVqc4SEpMBfiP3i7XRXIYY41qGZTyE6JC+7rP36BijepfhP6AdB04t89/1O/w1cDnyilFU=}`
+    };
+    await hr.get().then(async function (snap) {
+        await snap.forEach(function (u) {
+            idHr.push(u.data().userId)
+            console.log(idHr);
+            return idHr
+        });
+    })
+    request({
+        method: `POST`,
+        uri: `${LINE_MESSAGING_API_HR}`,
+        headers: LINE_HEADER_HR,
+        body: JSON.stringify({
+        //   to: "Ud7876758fece09a64eee8d3b1030fe76",
+        to: idHr,
+            messages: [{
+                type: "text",
+                text: "You have a new message about a request for leave."
+            }]
+        })
+    });
+    request({
+        method: `POST`,
+        uri: `${LINE_MESSAGING_API_USER}`,
+        headers: LINE_HEADER_USER,
+        body: JSON.stringify({
+            to: dbL.userId,
+        // to: idHr,
+            messages: [{
+                type: "text",
+                text: "You send a request for leave Successfully"
+            }]
+        })
+    });
     res.json(dbL);
 });
 //get ใบลา ตาม user หน้าstatus user ต้องการ uerId
