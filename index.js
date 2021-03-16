@@ -284,34 +284,27 @@ app.post('/api/post/calendar', async (req, res) => {
         //   to: "Ud7876758fece09a64eee8d3b1030fe76",
         to: idStaff,
         messages: [{
-            "type": "bubble",
-            "body": {
-              "type": "box",
-              "layout": "horizontal",
-              "contents": [
-                {
-                  "type": "text",
-                  "text": "Hello, World!",
-                  "wrap": true
-                }
-              ]
-            },
-            "footer": {
-              "type": "box",
-              "layout": "horizontal",
-              "contents": [
-                {
-                  "type": "button",
-                  "style": "primary",
-                  "action": {
+            "type": "template",
+            "altText": "A new event the calendar.",
+            "template": {
+                "type": "buttons",
+                "title": "Calendar",
+                "text": "A new event the calendar.",
+                "defaultAction": {
                     "type": "uri",
-                    "label": "Go",
-                    "uri": "https://example.com"
-                  }
-                }
-              ]
+                    "label": "Click",
+                    "uri": "https://liff.line.me/1655743042-OEqZ9nlB"
+                },
+                "actions": [
+                    {
+                      "type": "uri",
+                      "label": "Click",
+                      "uri": "https://liff.line.me/1655743042-OEqZ9nlB"
+                    }
+                ]
             }
-          }]
+          }
+        ]
         })
       });
     //   console.log(idStaff);
