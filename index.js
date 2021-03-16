@@ -754,23 +754,23 @@ app.get('/report/leave/:doc',async (req,res) =>{
     // let b = 0
 
     switch (req.params.doc) {
-        case '2021':
+        case '2019':
             yNow = y.add(0,'year').format(),
             yBack = y.add(1,'year').format();
             break;
-        case '2022':
+        case '2020':
             yNow = y.add(1,'year').format(),
             yBack = y.add(1,'year').format();
             break;
-        case '2023':
+        case '2021':
             yNow = y.add(2,'year').format(),
             yBack = y.add(1,'year').format();
             break;
-        case '2024':
+        case '2022':
             yNow = y.add(3,'year').format(),
             yBack = y.add(1,'year').format();
             break;
-        case '2025':
+        case '2023':
             yNow = y.add(4,'year').format(),
             yBack = y.add(1,'year').format();
             break;
