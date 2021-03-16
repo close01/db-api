@@ -284,38 +284,25 @@ app.post('/api/post/calendar', async (req, res) => {
         //   to: "Ud7876758fece09a64eee8d3b1030fe76",
         to: idStaff,
           messages: [{
-            "type": "carousel",
-            "contents": [
-              {
-                "type": "bubble",
-                "body": {
-                  "type": "box",
-                  "layout": "horizontal",
-                  "contents": [
-                    {
-                      "type": "text",
-                      "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-                      "wrap": true
-                    }
-                  ]
+            "type": "template",
+            "altText": "A new event the calendar.",
+            "template": {
+                "type": "box",
+                "title": "Calendar",
+                "text": "A new event the calendar.",
+                "defaultAction": {
+                    "type": "uri",
+                    "label": "Click",
+                    "uri": "https://liff.line.me/1655743042-OEqZ9nlB"
                 },
-                "footer": {
-                  "type": "box",
-                  "layout": "horizontal",
-                  "contents": [
+                "actions": [
                     {
-                      "type": "button",
-                      "style": "primary",
-                      "action": {
-                        "type": "uri",
-                        "label": "Go",
-                        "uri": "https://example.com"
-                      }
+                      "type": "uri",
+                      "label": "Click",
+                      "uri": "https://liff.line.me/1655743042-OEqZ9nlB"
                     }
-                  ]
-                }
-              }
-            ]
+                ]
+            }
           }]
           })
       });
