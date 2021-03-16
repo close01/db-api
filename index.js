@@ -284,39 +284,38 @@ app.post('/api/post/calendar', async (req, res) => {
         //   to: "Ud7876758fece09a64eee8d3b1030fe76",
         to: idStaff,
           messages: [{
-            "type": "template",
-            "altText": "This is a buttons template",
-            "template": {
-                "type": "buttons",
-                "thumbnailImageUrl": "https://example.com/bot/images/image.jpg",
-                "imageAspectRatio": "rectangle",
-                "imageSize": "cover",
-                "imageBackgroundColor": "#FFFFFF",
-                "title": "Menu",
-                "text": "Please select",
-                "defaultAction": {
-                    "type": "uri",
-                    "label": "View detail",
-                    "uri": "http://example.com/page/123"
-                },
-                "actions": [
+            "type": "carousel",
+            "contents": [
+              {
+                "type": "bubble",
+                "body": {
+                  "type": "box",
+                  "layout": "horizontal",
+                  "contents": [
                     {
-                      "type": "postback",
-                      "label": "Buy",
-                      "data": "action=buy&itemid=123"
-                    },
-                    {
-                      "type": "postback",
-                      "label": "Add to cart",
-                      "data": "action=add&itemid=123"
-                    },
-                    {
-                      "type": "uri",
-                      "label": "View detail",
-                      "uri": "http://example.com/page/123"
+                      "type": "text",
+                      "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+                      "wrap": true
                     }
-                ]
-            }
+                  ]
+                },
+                "footer": {
+                  "type": "box",
+                  "layout": "horizontal",
+                  "contents": [
+                    {
+                      "type": "button",
+                      "style": "primary",
+                      "action": {
+                        "type": "uri",
+                        "label": "Go",
+                        "uri": "https://example.com"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
           }]
           })
       });
