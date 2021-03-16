@@ -151,7 +151,7 @@ app.post('/api/post/leave',async (req,res) => {
         to: idHr,
             messages: [{
                 type: "text",
-                text: "You have a new message about a request for leave."
+                text: "You have a new message about a request for leave. https://liff.line.me/1655736391-Xkb94MeP"
             }]
         })
     });
@@ -164,7 +164,7 @@ app.post('/api/post/leave',async (req,res) => {
         // to: idHr,
             messages: [{
                 type: "text",
-                text: "You send a request for leave Successfully"
+                text: "You send a request for leave Successfully. https://liff.line.me/1655743042-do9lERxa"
             }]
         })
     });
@@ -234,8 +234,9 @@ app.put('/api/updateStatus/:doc',async (req,res) => {
         // to: idHr,
           messages: [{
               type: "text",
-              text: "The status of your leave request is updated."
+              text: "The status of your leave request is updated. https://liff.line.me/1655743042-do9lERxa"
           }]
+          
           })
       });
     res.json(approve)
@@ -283,8 +284,39 @@ app.post('/api/post/calendar', async (req, res) => {
         //   to: "Ud7876758fece09a64eee8d3b1030fe76",
         to: idStaff,
           messages: [{
-              type: "text",
-              text: "A new event the calendar.Click https://liff.line.me/1655743042-OEqZ9nlB"
+            "type": "template",
+            "altText": "This is a buttons template",
+            "template": {
+                "type": "buttons",
+                "thumbnailImageUrl": "https://example.com/bot/images/image.jpg",
+                "imageAspectRatio": "rectangle",
+                "imageSize": "cover",
+                "imageBackgroundColor": "#FFFFFF",
+                "title": "Menu",
+                "text": "Please select",
+                "defaultAction": {
+                    "type": "uri",
+                    "label": "View detail",
+                    "uri": "http://example.com/page/123"
+                },
+                "actions": [
+                    {
+                      "type": "postback",
+                      "label": "Buy",
+                      "data": "action=buy&itemid=123"
+                    },
+                    {
+                      "type": "postback",
+                      "label": "Add to cart",
+                      "data": "action=add&itemid=123"
+                    },
+                    {
+                      "type": "uri",
+                      "label": "View detail",
+                      "uri": "http://example.com/page/123"
+                    }
+                ]
+            }
           }]
           })
       });
