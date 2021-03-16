@@ -151,11 +151,11 @@ app.post('/api/post/leave',async (req,res) => {
         to: idHr,
             messages: [{
                 "type": "template",
-                "altText": "You have a new message about a request for leave.",
+                "altText": "\udbc0\udc84 You have a new message about a request for leave.",
                 "template": {
                     "type": "buttons",
                     "title": "Approve leave",
-                    "text": "You have a new message about a request for leave.",
+                    "text": "You have a new message about a request for leave. \udbc0\udc84",
                     "defaultAction": {
                         "type": "uri",
                         "label": "Click",
@@ -181,11 +181,11 @@ app.post('/api/post/leave',async (req,res) => {
         // to: idHr,
             messages: [{
                 "type": "template",
-                "altText": "You send a request for leave Successfully.",
+                "altText": "\udbc0\udc9d You send a request for leave Successfully.",
                 "template": {
                     "type": "buttons",
                     "title": "Request for leave",
-                    "text": "You send a request for leave Successfully.",
+                    "text": "You send a request for leave Successfully. \udbc0\udc9d",
                     "defaultAction": {
                         "type": "uri",
                         "label": "Click",
@@ -268,11 +268,11 @@ app.put('/api/updateStatus/:doc',async (req,res) => {
         // to: idHr,
           messages: [{
             "type": "template",
-            "altText": "The status of your leave request is updated.",
+            "altText": "\udbc0\udc85 The status of your leave request is updated.",
             "template": {
                 "type": "buttons",
                 "title": "Request for leave",
-                "text": "The status of your leave request is updated.",
+                "text": "The status of your leave request is updated. \udbc0\udc85",
                 "defaultAction": {
                     "type": "uri",
                     "label": "Click",
@@ -337,11 +337,11 @@ app.post('/api/post/calendar', async (req, res) => {
         to: idStaff,
         messages: [{
             "type": "template",
-            "altText": "A new event the calendar.",
+            "altText": "\udbc0\udc85 A new event the calendar.",
             "template": {
                 "type": "buttons",
                 "title": "Calendar",
-                "text": "A new event the calendar.",
+                "text": "A new event the calendar. \udbc0\udc85",
                 "defaultAction": {
                     "type": "uri",
                     "label": "Click",
