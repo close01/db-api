@@ -284,7 +284,7 @@ app.post('/api/post/calendar', async (req, res) => {
         to: idStaff,
           messages: [{
               type: "text",
-              text: "A new event the calendar."
+              text: "A new event the calendar.Click https://liff.line.me/1655743042-OEqZ9nlB"
           }]
           })
       });
