@@ -284,9 +284,34 @@ app.post('/api/post/calendar', async (req, res) => {
         //   to: "Ud7876758fece09a64eee8d3b1030fe76",
         to: idStaff,
         messages: [{
-            type: "text",
-            text: "The status of your leave request is updated. https://liff.line.me/1655743042-do9lERxa"
-        }]
+            "type": "bubble",
+            "body": {
+              "type": "box",
+              "layout": "horizontal",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "Hello, World!",
+                  "wrap": true
+                }
+              ]
+            },
+            "footer": {
+              "type": "box",
+              "layout": "horizontal",
+              "contents": [
+                {
+                  "type": "button",
+                  "style": "primary",
+                  "action": {
+                    "type": "uri",
+                    "label": "Go",
+                    "uri": "https://example.com"
+                  }
+                }
+              ]
+            }
+          }]
         })
       });
     //   console.log(idStaff);
