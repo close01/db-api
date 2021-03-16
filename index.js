@@ -155,7 +155,7 @@ app.post('/api/post/leave',async (req,res) => {
                 "template": {
                     "type": "buttons",
                     "title": "Approve leave",
-                    "text": "You have a new message about a request for leave. \udbc0\udc84",
+                    "text": "You have a new message about a request for leave.",
                     "defaultAction": {
                         "type": "uri",
                         "label": "Click",
@@ -185,7 +185,7 @@ app.post('/api/post/leave',async (req,res) => {
                 "template": {
                     "type": "buttons",
                     "title": "Request for leave",
-                    "text": "You send a request for leave Successfully. \udbc0\udc9d",
+                    "text": "You send a request for leave Successfully.",
                     "defaultAction": {
                         "type": "uri",
                         "label": "Click",
@@ -272,7 +272,7 @@ app.put('/api/updateStatus/:doc',async (req,res) => {
             "template": {
                 "type": "buttons",
                 "title": "Request for leave",
-                "text": "The status of your leave request is updated. \udbc0\udc85",
+                "text": "The status of your leave request is updated.",
                 "defaultAction": {
                     "type": "uri",
                     "label": "Click",
@@ -341,7 +341,7 @@ app.post('/api/post/calendar', async (req, res) => {
             "template": {
                 "type": "buttons",
                 "title": "Calendar",
-                "text": "A new event the calendar. \udbc0\udc85",
+                "text": "A new event the calendar.",
                 "defaultAction": {
                     "type": "uri",
                     "label": "Click",
