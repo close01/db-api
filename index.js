@@ -311,7 +311,8 @@ app.post('/api/post/calendar', async (req, res) => {
         dateActivity: calender.dateActivity,
         date: calender.date
     });
-    const staff = await firestore.collection('user').where('rank','==','Staff')
+    const staff = await firestore.collection('user')
+    // .where('rank','==','Staff')
     let idStaff = []
     const LINE_MESSAGING_API = 'https://api.line.me/v2/bot/message/multicast';
     const LINE_HEADER = {
@@ -677,25 +678,25 @@ app.get('/get/user',async (req,res) => {
 })
 //////////////////report in out
 app.get('/get/user1/:doc',async (req,res) => {
-    let m = moment("20210101") // 2021-01-01T00:00:00+07:00 yyyy-mm-dd
+    let m = moment("20190101") // 2021-01-01T00:00:00+07:00 yyyy-mm-dd
     let mNow = ""
     let mBack = ""
     let mmyy = req.params.doc.split("S")//dd S yyyy
     // console.log(mmyy[1].toString());
     switch (mmyy[1].toString()) {
-        case '2021':
+        case '2019':
             m = m.add(0,'year')
             break;
-        case '2022':
+        case '2020':
             m = m.add(1,'year')
             break;
-        case '2023':
+        case '2021':
             m = m.add(2,'year')
             break;
-        case '2024':
+        case '2022':
             m = m.add(3,'year')
             break;
-        case '2025':
+        case '2023':
             m = m.add(4,'year')
             break;
     }
