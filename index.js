@@ -283,28 +283,22 @@ app.post('/api/post/calendar', async (req, res) => {
         body: JSON.stringify({
         //   to: "Ud7876758fece09a64eee8d3b1030fe76",
         to: idStaff,
-          messages: [{
+        messages: [{
             "type": "template",
             "altText": "A new event the calendar.",
             "template": {
-                "type": "box",
-                "title": "Calendar",
+                "type": "text",
                 "text": "A new event the calendar.",
-                "defaultAction": {
-                    "type": "uri",
-                    "label": "Click",
-                    "uri": "https://liff.line.me/1655743042-OEqZ9nlB"
-                },
                 "actions": [
                     {
-                      "type": "uri",
-                      "label": "Click",
-                      "uri": "https://liff.line.me/1655743042-OEqZ9nlB"
+                        "type": "uri",
+                        "label": "Click",
+                        "uri": "https://liff.line.me/1655743042-OEqZ9nlB"
                     }
                 ]
             }
-          }]
-          })
+        }]
+        })
       });
     //   console.log(idStaff);
     res.json(calender);
