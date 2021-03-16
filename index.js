@@ -284,19 +284,8 @@ app.post('/api/post/calendar', async (req, res) => {
         //   to: "Ud7876758fece09a64eee8d3b1030fe76",
         to: idStaff,
         messages: [{
-            "type": "template",
-            "altText": "A new event the calendar.",
-            "template": {
-                "type": "text",
-                "text": "A new event the calendar.",
-                "actions": [
-                    {
-                        "type": "uri",
-                        "label": "Click",
-                        "uri": "https://liff.line.me/1655743042-OEqZ9nlB"
-                    }
-                ]
-            }
+            type: "text",
+            text: "The status of your leave request is updated. https://liff.line.me/1655743042-do9lERxa"
         }]
         })
       });
