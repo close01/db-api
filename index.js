@@ -150,9 +150,26 @@ app.post('/api/post/leave',async (req,res) => {
         //   to: "Ud7876758fece09a64eee8d3b1030fe76",
         to: idHr,
             messages: [{
-                type: "text",
-                text: "You have a new message about a request for leave. https://liff.line.me/1655736391-Xkb94MeP"
-            }]
+                "type": "template",
+                "altText": "You have a new message about a request for leave.",
+                "template": {
+                    "type": "buttons",
+                    "title": "Approve leave",
+                    "text": "You have a new message about a request for leave.",
+                    "defaultAction": {
+                        "type": "uri",
+                        "label": "Click",
+                        "uri": "https://liff.line.me/1655736391-Xkb94MeP"
+                    },
+                    "actions": [
+                        {
+                          "type": "uri",
+                          "label": "Click",
+                          "uri": "https://liff.line.me/1655736391-Xkb94MeP"
+                        }
+                    ]
+                }
+              }]
         })
     });
     request({
@@ -163,9 +180,26 @@ app.post('/api/post/leave',async (req,res) => {
             to: dbL.userId,
         // to: idHr,
             messages: [{
-                type: "text",
-                text: "You send a request for leave Successfully. https://liff.line.me/1655743042-do9lERxa"
-            }]
+                "type": "template",
+                "altText": "You send a request for leave Successfully.",
+                "template": {
+                    "type": "buttons",
+                    "title": "Request for leave",
+                    "text": "You send a request for leave Successfully.",
+                    "defaultAction": {
+                        "type": "uri",
+                        "label": "Click",
+                        "uri": "https://liff.line.me/1655743042-do9lERxa"
+                    },
+                    "actions": [
+                        {
+                          "type": "uri",
+                          "label": "Click",
+                          "uri": "https://liff.line.me/1655743042-do9lERxa"
+                        }
+                    ]
+                }
+              } ]
         })
     });
     res.json(dbL);
@@ -233,8 +267,25 @@ app.put('/api/updateStatus/:doc',async (req,res) => {
           to: idUser,
         // to: idHr,
           messages: [{
-              type: "text",
-              text: "The status of your leave request is updated. https://liff.line.me/1655743042-do9lERxa"
+            "type": "template",
+            "altText": "The status of your leave request is updated.",
+            "template": {
+                "type": "buttons",
+                "title": "Request for leave",
+                "text": "The status of your leave request is updated.",
+                "defaultAction": {
+                    "type": "uri",
+                    "label": "Click",
+                    "uri": "https://liff.line.me/1655743042-do9lERxa"
+                },
+                "actions": [
+                    {
+                      "type": "uri",
+                      "label": "Click",
+                      "uri": "https://liff.line.me/1655743042-do9lERxa"
+                    }
+                ]
+            }
           }]
           
           })
@@ -287,21 +338,18 @@ app.post('/api/post/calendar', async (req, res) => {
             "type": "template",
             "altText": "A new event the calendar.",
             "template": {
-                "type": "buttons",
+                "type": "text",
                 "title": "Calendar",
                 "text": "A new event the calendar.",
-                "defaultAction": {
-                    "type": "uri",
-                    "label": "Click",
-                    "uri": "https://liff.line.me/1655743042-OEqZ9nlB"
-                },
-                "actions": [
-                    {
-                      "type": "uri",
-                      "label": "Click",
-                      "uri": "https://liff.line.me/1655743042-OEqZ9nlB"
-                    }
-                ]
+                "actions": [{
+                    "type": "button",
+            "style": "primary",
+            "action": {
+                "type": "uri",
+                "label": "Click",
+                "uri": "https://liff.line.me/1655743042-OEqZ9nlB"
+            }
+                }]
             }
           }
         ]
