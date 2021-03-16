@@ -709,7 +709,7 @@ app.get('/get/user1/:doc',async (req,res) => {
             console.log(mBack);
             break;  
       }
-    const dbuser = await firestore.collection("user")
+    const dbuser = await firestore.collection("user").where('status','==','Staff')
     const dbinout =await  firestore.collection("checkinout")
 
     const queryDBUserSnapshot = await dbuser.get()
@@ -758,7 +758,7 @@ app.get('/report/leave/:doc',async (req,res) =>{
             break;
     }
 
-    const dbUser = await firestore.collection('user')
+    const dbUser = await firestore.collection('user').where('status','==','Staff')
     // const dbleavYear = await firestore.collection('leave').where("startValue",">=",yNow).where("startValue","<",yBack)
     const dbLeave = await firestore.collection('leave').where("startValue",">=",yNow).where("startValue","<",yBack)
     // const dbLeave = await await firestore.collection('leave').where('status','>','รออนุมัติ')
