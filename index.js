@@ -335,63 +335,24 @@ app.post('/api/post/calendar', async (req, res) => {
         //   to: "Ud7876758fece09a64eee8d3b1030fe76",
         to: idStaff,
         messages: [{
-            "type": "bubble",
-            "body": {
-              "type": "box",
-              "layout": "vertical",
-              "contents": [
-                {
-                  "type": "text",
-                  "text": "Brown Cafe",
-                  "weight": "bold",
-                  "size": "xl"
-                },
-                {
-                  "type": "box",
-                  "layout": "vertical",
-                  "margin": "lg",
-                  "spacing": "sm",
-                  "contents": [
-                    {
-                      "type": "box",
-                      "layout": "baseline",
-                      "spacing": "sm",
-                      "contents": [
-                        {
-                          "type": "text",
-                          "text": "Miraina Tower, 4-1-6 Shinjuku, Tokyo",
-                          "wrap": true,
-                          "color": "#666666",
-                          "size": "sm",
-                          "flex": 5
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            },
-            "footer": {
-              "type": "box",
-              "layout": "vertical",
-              "spacing": "sm",
-              "contents": [
-                {
-                  "type": "button",
-                  "style": "secondary",
-                  "height": "sm",
-                  "action": {
+            "type": "template",
+            "altText": "A new event the calendar.",
+            "template": {
+                "type": "buttons",
+                "title": "Calendar",
+                "text": "A new event the calendar.",
+                "defaultAction": {
                     "type": "uri",
-                    "label": "WEBSITE",
-                    "uri": "https://linecorp.com"
-                  }
+                    "label": "Click",
+                    "uri": "https://liff.line.me/1655743042-OEqZ9nlB"
                 },
-                {
-                  "type": "spacer",
-                  "size": "sm"
-                }
-              ],
-              "flex": 0
+                "actions": [
+                    {
+                      "type": "uri",
+                      "label": "Click",
+                      "uri": "https://liff.line.me/1655743042-OEqZ9nlB"
+                    }
+                ]
             }
           }
         ]
