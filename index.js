@@ -338,14 +338,14 @@ app.post('/api/post/calendar', async (req, res) => {
             "type": "template",
             "altText": "A new event the calendar.",
             "template": {
-                "type": "text",
+                "type": "buttons",
                 "title": "Calendar",
                 "text": "A new event the calendar.",
-                // "defaultAction": {
-                //     "type": "uri",
-                //     "label": "Click",
-                //     "uri": "https://liff.line.me/1655743042-OEqZ9nlB"
-                // },
+                "defaultAction": {
+                    "type": "uri",
+                    "label": "Click",
+                    "uri": "https://liff.line.me/1655743042-OEqZ9nlB"
+                },
                 "actions": [
                     {
                       "type": "uri",
