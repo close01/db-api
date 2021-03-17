@@ -859,10 +859,10 @@ app.get('/report/leave/:doc',async (req,res) =>{
         data['numLeave'] = result6.length
         data['numApprove'] = result2.length
         data['numDisapproval'] = result4.length
-        // const result = await dbLeave.where('userId',"==",data.userId).orderBy('startValue').orderBy('status').get()
-        // const leave = result.docs.map(doc=> doc.data());
+        const result = await dbLeave.where('userId',"==",data.userId).orderBy('startValue').orderBy('status').get()
+        const leave = result.docs.map(doc=> doc.data());
 
-        // data['leave'] = leave
+        data['leave'] = leave
         // console.log(leave);
         return temp
     }));
