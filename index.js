@@ -242,23 +242,49 @@ app.post('/api/post/leave',async (req,res) => {
     res.json(dbL);
 });
 //get ใบลา ตาม user หน้าstatus user ต้องการ uerId
-app.get('/api/get/leaveByUser/:doc', (req, res) => {
-    let item = []
-    firestore.collection("leave").where("userId","==",req.params.doc).orderBy("status").get().then(function(snapshot){
+app.get('/api/get/leaveByUser/:doc',async (req, res) => {
+    // let item = []
+    // firestore.collection("leave").where("userId","==",req.params.doc).orderBy("status").get().then(function(snapshot){
+    //     snapshot.forEach(function(docs){
+    //         item.push(docs.data())
+    //     });
+        
+    //    res.json(item); 
+    // });
+    let yy = moment().subtract(1,'year').format() 
+    // console.log(yy);
 
-        snapshot.forEach(function(docs){
-
-            item.push(docs.data())
-
-        });
-       res.json(item); 
-    });
+    const dbleave =await firestore.collection("leave")
+    const dbuser = await firestore.collection("user").where("userId","==",req.params.doc).get()
+    const dbUserDocs = await dbuser.docs.map(doc => doc.data());
+    // const dbUserDocs = queryDBUserSnapshot.docs.map(doc => doc.data());
+    const last = await Promise.all(dbUserDocs.map(async (data) => {
+        let temp ={ info: data };
+        const result1 = await dbleave.where('userId','==', data.userId)
+        .where('status','==','Approve').where('startValue','>=',yy).orderBy('startValue').get();
+        const leave1 = result1.docs.map(doc => doc.data());
+        const result2 = await dbleave.where('userId','==', data.userId)
+        .where('status','==','Wait').where('startValue','>=',yy).orderBy('startValue').get();
+        const leave2 = result2.docs.map(doc => doc.data());
+        const result3 = await dbleave.where('userId','==', data.userId)
+        .where('status','==','Reject').where('startValue','>=',yy).orderBy('startValue').get();
+        const leave3 = result3.docs.map(doc => doc.data());
+        // .where("dateShow",">=",mNow).where("dateShow","<",mBack)
+        // .orderBy('dateShow').get()
+        // const inout = result.docs.map(doc => doc.data());
+        data['yes'] = leave1
+        data['wait'] = leave2
+        data['no'] = leave3
+        
+        return temp
+}));
+res.json(last)
 });
 
 //get ใบให้ hr approve
 app.get('/api/get/approve',async (req, res) => {
     let items = []
-    firestore.collection("leave").where("status","==","รออนุมัติ").get().then(async function(snapshot){
+    firestore.collection("leave").where("status","==","Wait").get().then(async function(snapshot){
         snapshot.forEach (function(docs){
             items.push(docs.data());
         });
@@ -364,7 +390,7 @@ app.post('/api/post/calendar', async (req, res) => {
             return idStaff
         });
     })
-    console.log(idStaff);
+    // console.log(idStaff);
     request({
         method: `POST`,
         uri: `${LINE_MESSAGING_API}`,
@@ -418,8 +444,8 @@ app.put('/api/edit/calendar/:doc', (req, res) => {
 //get calendar order by date
 app.get('/api/get/calendar', (req, res) => {
     const moment = require("moment");
+    // console.log(moment().format('MMMM'));
     let item = []
-    
     firestore.collection("calendar").where("date", ">=",moment().format()).orderBy("date").get().then(function(snapshot){
         snapshot.forEach(function(docs){
             item.push(docs.data())
@@ -764,6 +790,7 @@ app.get('/get/report/inout/user/:doc',async (req,res) => {
             mBack = m.add(12, 'month').format();
             console.log(mNow);
             console.log(mBack);
+
             break;  
       }
     const dbuser = await firestore.collection("user")
@@ -815,16 +842,16 @@ app.get('/report/leave/:doc',async (req,res) =>{
     // .where('rank','==','Staff')
     // const dbleavYear = await firestore.collection('leave').where("startValue",">=",yNow).where("startValue","<",yBack)
     const dbLeave = await firestore.collection('leave').where("startValue",">=",yNow).where("startValue","<",yBack)
-    // const dbLeave = await await firestore.collection('leave').where('status','>','รออนุมัติ')
+    // const dbLeave = await await firestore.collection('leave').where('status','>','Wait')
     const queryDBUserSnapshot = await dbUser.get()
     const dbUserDocs = queryDBUserSnapshot.docs.map(doc => doc.data());
 
     const report = await Promise.all(dbUserDocs.map(async (data)=>{
         let temp = {info: data };
 
-        const result1 = await dbLeave.where('userId',"==",data.userId).where('status','==','อนุมัติ').get();
+        const result1 = await dbLeave.where('userId',"==",data.userId).where('status','==','Approve').get();
         const result2 = result1.docs.map(doc=> doc.data());
-        const result3 = await dbLeave.where('userId',"==",data.userId).where('status','==','ไม่อนุมัติ').get()
+        const result3 = await dbLeave.where('userId',"==",data.userId).where('status','==','Reject').get()
         const result4 = result3.docs.map(doc=> doc.data());
         const result5 = await dbLeave.where('userId',"==",data.userId).get()
         const result6 = result5.docs.map(doc=> doc.data());
@@ -875,16 +902,16 @@ app.get('/report/leave/userid/:doc',async (req,res) =>{
     // .where('rank','==','Staff')
     // const dbleavYear = await firestore.collection('leave').where("startValue",">=",yNow).where("startValue","<",yBack)
     const dbLeave = await firestore.collection('leave').where("startValue",">=",yNow).where("startValue","<",yBack)
-    // const dbLeave = await await firestore.collection('leave').where('status','>','รออนุมัติ')
+    // const dbLeave = await await firestore.collection('leave').where('status','>','Wait')
     const queryDBUserSnapshot = await dbUser.get()
     const dbUserDocs = queryDBUserSnapshot.docs.map(doc => doc.data());
 
     const report = await Promise.all(dbUserDocs.map(async (data)=>{
         let temp = {info: data };
 
-        // const result1 = await dbLeave.where('userId',"==",data.userId).where('status','==','อนุมัติ').get();
+        // const result1 = await dbLeave.where('userId',"==",data.userId).where('status','==','Approve').get();
         // const result2 = result1.docs.map(doc=> doc.data());
-        // const result3 = await dbLeave.where('userId',"==",data.userId).where('status','==','ไม่อนุมัติ').get()
+        // const result3 = await dbLeave.where('userId',"==",data.userId).where('status','==','Reject').get()
         // const result4 = result3.docs.map(doc=> doc.data());
         // const result5 = await dbLeave.where('userId',"==",data.userId).get()
         // const result6 = result5.docs.map(doc=> doc.data());
@@ -894,17 +921,17 @@ app.get('/report/leave/userid/:doc',async (req,res) =>{
         // data['numDisapproval'] = result4.length
         // const result = await dbLeave.where('userId',"==",data.userId).orderBy('startValue').orderBy('status').get()
         // const leave = result.docs.map(doc=> doc.data());
-        const result2 = await dbLeave.where('userId',"==",data.userId).where('status','==','อนุมัติ').orderBy('startValue').get()
+        const result2 = await dbLeave.where('userId',"==",data.userId).where('status','==','Approve').orderBy('startValue').get()
         const leave2 = result2.docs.map(doc=> doc.data());
-        const result3 = await dbLeave.where('userId',"==",data.userId).where('status','==','ไม่อนุมัติ').orderBy('startValue').get()
+        const result3 = await dbLeave.where('userId',"==",data.userId).where('status','==','Reject').orderBy('startValue').get()
         const leave3 = result3.docs.map(doc=> doc.data());
-        const result4 = await dbLeave.where('userId',"==",data.userId).where('status','==','รออนุมัติ').orderBy('startValue').get()
+        const result4 = await dbLeave.where('userId',"==",data.userId).where('status','==','Wait').orderBy('startValue').get()
         const leave4 = result4.docs.map(doc=> doc.data());
         // data['leave'] = leave
         data['leavePass'] = leave2
         data['leaveNoPass'] = leave3
         data['leaveroPass'] = leave4
-        // console.log(leave);
+        
         return temp
     }));
     res.json(report)
