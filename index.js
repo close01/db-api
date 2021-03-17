@@ -56,6 +56,24 @@ app.post('/api/post/user', (req, res) => {
         position: user.position,
         rank:user.rank
     });
+    const LINE_MESSAGING_API = 'https://api.line.me/v2/bot/message/multicast';
+    const LINE_HEADER = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer {dCibnFNR1wHpjpqf51ArFk+4bsUShozYw3QIFr0U1r2adBk+/aNGSdm738J6qqGt5elkLO4eBwlTZz0jdD40+rAG42fLo9sD8Mhb4YLpxNDD80OLTeQlWo8FAvJxald9klaVQ5ei/a9aDKPcLavD5AdB04t89/1O/w1cDnyilFU=}`
+      };
+    request({
+        method: `POST`,
+        uri: `${LINE_MESSAGING_API}`,
+        headers: LINE_HEADER,
+        body: JSON.stringify({
+        //   to: "Ud7876758fece09a64eee8d3b1030fe76",
+        to: user.userId,
+        messages: [{
+            type: "text",
+            text: "\udbc0\udc84 Wellcome " + user.name
+          }]
+        })
+      });
     res.json(user);
 });
 
@@ -510,7 +528,7 @@ app.get('/get/user1/:doc',async (req,res) => {
     let m = moment("20190101") // 2021-01-01T00:00:00+07:00 yyyy-mm-dd
     let mNow = ""
     let mBack = ""
-    let mmyy = req.params.doc.split("S")//dd S yyyy
+    let mmyy = req.params.doc.split("|")//dd S yyyy
     // console.log(mmyy[1].toString());
     switch (mmyy[1].toString()) {
         case '2019':
@@ -626,6 +644,126 @@ app.get('/get/user1/:doc',async (req,res) => {
     }));
     res.json(last)
 })
+///////////////////////report in out user
+app.get('/get/report/inout/user/:doc',async (req,res) => {
+    let m = moment("20190101") // 2021-01-01T00:00:00+07:00 yyyy-mm-dd
+    let mNow = ""
+    let mBack = ""
+    let mmyy = req.params.doc.split("|")//dd|yyyy|userid
+    // console.log(mmyy[1].toString());
+    switch (mmyy[1].toString()) {
+        case '2019':
+            m = m.add(0,'year')
+            break;
+        case '2020':
+            m = m.add(1,'year')
+            break;
+        case '2021':
+            m = m.add(2,'year')
+            break;
+        case '2022':
+            m = m.add(3,'year')
+            break;
+        case '2023':
+            m = m.add(4,'year')
+            break;
+    }
+    switch (mmyy[0].toString()) {
+        case 'January':
+            mNow = m.format(),
+            mBack = m.add(1, 'month').format();
+            console.log(mNow);
+            console.log(mBack);
+            break;
+        case 'February':
+            mNow = m.add(1, 'month').format(),
+            mBack = m.add(1, 'month').format();
+            console.log(mNow);
+            console.log(mBack);
+            break;
+        case 'March':
+            mNow = m.add(2, 'month').format(),
+            mBack = m.add(1, 'month').format();
+            console.log(mNow);
+            console.log(mBack);
+            break;
+        case 'April':
+            mNow = m.add(3, 'month').format(),
+            mBack = m.add(1, 'month').format();
+            console.log(mNow);
+            console.log(mBack);
+            break;
+        case 'May':
+            mNow = m.add(4, 'month').format(),
+            mBack = m.add(1, 'month').format();
+            console.log(mNow);
+            console.log(mBack);
+            break;
+        case 'June':
+            mNow = m.add(5, 'month').format(),
+            mBack = m.add(1, 'month').format();
+            console.log(mNow);
+            console.log(mBack);
+            break;
+        case 'July':
+            mNow = m.add(6, 'month').format(),
+            mBack = m.add(1, 'month').format();
+            console.log(mNow);
+            console.log(mBack);
+            break;
+        case 'August':
+            mNow = m.add(7, 'month').format(),
+            mBack = m.add(1, 'month').format();
+            console.log(mNow);
+            console.log(mBack);
+            break;
+        case 'September':
+            mNow = m.add(8, 'month').format(),
+            mBack = m.add(1, 'month').format();
+            console.log(mNow);
+            console.log(mBack);
+            break;
+        case 'October':
+            mNow = m.add(9, 'month').format(),
+            mBack = m.add(1, 'month').format();
+            console.log(mNow);
+            console.log(mBack);
+            break;
+        case 'November':
+            mNow = m.add(10, 'month').format(),
+            mBack = m.add(1, 'month').format();
+            console.log(mNow);
+            console.log(mBack);
+            break;   
+        case 'December':
+            mNow = m.add(11, 'month').format(),
+            mBack = m.add(1, 'month').format();
+            console.log(mNow);
+            console.log(mBack);
+            break; 
+        case 'All':
+            mNow = m.format(),
+            mBack = m.add(12, 'month').format();
+            console.log(mNow);
+            console.log(mBack);
+            break;  
+      }
+    const dbuser = await firestore.collection("user")
+    // .where('rank','==','Staff')
+    const dbinout =await  firestore.collection("checkinout")
+
+    const queryDBUserSnapshot = await dbuser.get()
+    const dbUserDocs = queryDBUserSnapshot.docs.map(doc => doc.data());
+    const last = await Promise.all(dbUserDocs.map(async (data) => {
+            let temp ={ info: data }
+            const result = await dbinout.where('userId','==', data.userId)
+            .where("dateShow",">=",mNow).where("dateShow","<",mBack).orderBy('dateShow').get()
+            const inout = result.docs.map(doc => doc.data());
+            data['inout'] = inout
+            return temp
+    }));
+    res.json(last)
+})
 //////
 app.get('/report/leave/:doc',async (req,res) =>{
     let y = moment("20190101") // 2019-01-01T00:00:00+07:00 yyyy-mm-dd
@@ -676,11 +814,79 @@ app.get('/report/leave/:doc',async (req,res) =>{
         data['numLeave'] = result6.length
         data['numApprove'] = result2.length
         data['numDisapproval'] = result4.length
-        const result = await dbLeave.where('userId',"==",data.userId).orderBy('startValue').orderBy('status').get()
-        const leave = result.docs.map(doc=> doc.data());
+        // const result = await dbLeave.where('userId',"==",data.userId).orderBy('startValue').orderBy('status').get()
+        // const leave = result.docs.map(doc=> doc.data());
 
-        data['leave'] = leave
-        console.log(leave);
+        // data['leave'] = leave
+        // console.log(leave);
+        return temp
+    }));
+    res.json(report)
+})
+///////////////////report leave by user
+app.get('/report/leave/userid/:doc',async (req,res) =>{
+    let y = moment("20190101") // 2019-01-01T00:00:00+07:00 yyyy-mm-dd
+    let yNow = ""
+    let yBack = ""
+    let yyid = req.params.doc.split("|")
+
+    switch (yyid[0].toString()) {
+        case '2019':
+            yNow = y.add(0,'year').format(),
+            yBack = y.add(1,'year').format();
+            break;
+        case '2020':
+            yNow = y.add(1,'year').format(),
+            yBack = y.add(1,'year').format();
+            break;
+        case '2021':
+            yNow = y.add(2,'year').format(),
+            yBack = y.add(1,'year').format();
+            break;
+        case '2022':
+            yNow = y.add(3,'year').format(),
+            yBack = y.add(1,'year').format();
+            break;
+        case '2023':
+            yNow = y.add(4,'year').format(),
+            yBack = y.add(1,'year').format();
+            break;
+    }
+
+    const dbUser = await firestore.collection('user').where('userId','==',yyid[1].toString())
+    // .where('rank','==','Staff')
+    // const dbleavYear = await firestore.collection('leave').where("startValue",">=",yNow).where("startValue","<",yBack)
+    const dbLeave = await firestore.collection('leave').where("startValue",">=",yNow).where("startValue","<",yBack)
+    // const dbLeave = await await firestore.collection('leave').where('status','>','รออนุมัติ')
+    const queryDBUserSnapshot = await dbUser.get()
+    const dbUserDocs = queryDBUserSnapshot.docs.map(doc => doc.data());
+
+    const report = await Promise.all(dbUserDocs.map(async (data)=>{
+        let temp = {info: data };
+
+        // const result1 = await dbLeave.where('userId',"==",data.userId).where('status','==','อนุมัติ').get();
+        // const result2 = result1.docs.map(doc=> doc.data());
+        // const result3 = await dbLeave.where('userId',"==",data.userId).where('status','==','ไม่อนุมัติ').get()
+        // const result4 = result3.docs.map(doc=> doc.data());
+        // const result5 = await dbLeave.where('userId',"==",data.userId).get()
+        // const result6 = result5.docs.map(doc=> doc.data());
+
+        // data['numLeave'] = result6.length
+        // data['numApprove'] = result2.length
+        // data['numDisapproval'] = result4.length
+        // const result = await dbLeave.where('userId',"==",data.userId).orderBy('startValue').orderBy('status').get()
+        // const leave = result.docs.map(doc=> doc.data());
+        const result2 = await dbLeave.where('userId',"==",data.userId).where('status','==','อนุมัติ').orderBy('startValue').get()
+        const leave2 = result2.docs.map(doc=> doc.data());
+        const result3 = await dbLeave.where('userId',"==",data.userId).where('status','==','ไม่อนุมัติ').orderBy('startValue').get()
+        const leave3 = result3.docs.map(doc=> doc.data());
+        const result4 = await dbLeave.where('userId',"==",data.userId).where('status','==','รออนุมัติ').orderBy('startValue').get()
+        const leave4 = result4.docs.map(doc=> doc.data());
+        // data['leave'] = leave
+        data['leavePass'] = leave2
+        data['leaveNoPass'] = leave3
+        data['leaveroPass'] = leave4
+        // console.log(leave);
         return temp
     }));
     res.json(report)
