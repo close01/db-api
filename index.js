@@ -572,7 +572,7 @@ app.get('/get/user1/:doc',async (req,res) => {
     let m = moment("20190101") // 2021-01-01T00:00:00+07:00 yyyy-mm-dd
     let mNow = ""
     let mBack = ""
-    let mmyy = req.params.doc.split("|")//dd S yyyy
+    let mmyy = req.params.doc.split("ABCDE")//dd S yyyy
     // console.log(mmyy[1].toString());
     switch (mmyy[1].toString()) {
         case '2019':
@@ -693,7 +693,7 @@ app.get('/get/report/inout/user/:doc',async (req,res) => {
     let m = moment("20190101") // 2021-01-01T00:00:00+07:00 yyyy-mm-dd
     let mNow = ""
     let mBack = ""
-    let mmyy = req.params.doc.split("|")//dd|yyyy|userid
+    let mmyy = req.params.doc.split("ABCDE")//dd|yyyy|userid
     // console.log(mmyy[1].toString());
     switch (mmyy[1].toString()) {
         case '2019':
@@ -873,7 +873,7 @@ app.get('/report/leave/userid/:doc',async (req,res) =>{
     let y = moment("20190101") // 2019-01-01T00:00:00+07:00 yyyy-mm-dd
     let yNow = ""
     let yBack = ""
-    let yyid = req.params.doc.split("|")
+    let yyid = req.params.doc.split("ABCDE")
 
     switch (yyid[0].toString()) {
         case '2019':
@@ -990,3 +990,123 @@ function reply() {
     });
 }
 ///////////////////////////////////////////////////////////////
+app.get('/get/report/inout/user/:doc',async (req,res) => {
+    let m = moment("20190101") // 2021-01-01T00:00:00+07:00 yyyy-mm-dd
+    let mNow = ""
+    let mBack = ""
+    let mmyy = req.params.doc.split("ABCDE")//dd|yyyy|userid
+    // console.log(mmyy[1].toString());
+    switch (mmyy[1].toString()) {
+        case '2019':
+            m = m.add(0,'year')
+            break;
+        case '2020':
+            m = m.add(1,'year')
+            break;
+        case '2021':
+            m = m.add(2,'year')
+            break;
+        case '2022':
+            m = m.add(3,'year')
+            break;
+        case '2023':
+            m = m.add(4,'year')
+            break;
+    }
+    switch (mmyy[0].toString()) {
+        case 'January':
+            mNow = m.format(),
+            mBack = m.add(1, 'month').format();
+            console.log(mNow);
+            console.log(mBack);
+            break;
+        case 'February':
+            mNow = m.add(1, 'month').format(),
+            mBack = m.add(1, 'month').format();
+            console.log(mNow);
+            console.log(mBack);
+            break;
+        case 'March':
+            mNow = m.add(2, 'month').format(),
+            mBack = m.add(1, 'month').format();
+            console.log(mNow);
+            console.log(mBack);
+            break;
+        case 'April':
+            mNow = m.add(3, 'month').format(),
+            mBack = m.add(1, 'month').format();
+            console.log(mNow);
+            console.log(mBack);
+            break;
+        case 'May':
+            mNow = m.add(4, 'month').format(),
+            mBack = m.add(1, 'month').format();
+            console.log(mNow);
+            console.log(mBack);
+            break;
+        case 'June':
+            mNow = m.add(5, 'month').format(),
+            mBack = m.add(1, 'month').format();
+            console.log(mNow);
+            console.log(mBack);
+            break;
+        case 'July':
+            mNow = m.add(6, 'month').format(),
+            mBack = m.add(1, 'month').format();
+            console.log(mNow);
+            console.log(mBack);
+            break;
+        case 'August':
+            mNow = m.add(7, 'month').format(),
+            mBack = m.add(1, 'month').format();
+            console.log(mNow);
+            console.log(mBack);
+            break;
+        case 'September':
+            mNow = m.add(8, 'month').format(),
+            mBack = m.add(1, 'month').format();
+            console.log(mNow);
+            console.log(mBack);
+            break;
+        case 'October':
+            mNow = m.add(9, 'month').format(),
+            mBack = m.add(1, 'month').format();
+            console.log(mNow);
+            console.log(mBack);
+            break;
+        case 'November':
+            mNow = m.add(10, 'month').format(),
+            mBack = m.add(1, 'month').format();
+            console.log(mNow);
+            console.log(mBack);
+            break;   
+        case 'December':
+            mNow = m.add(11, 'month').format(),
+            mBack = m.add(1, 'month').format();
+            console.log(mNow);
+            console.log(mBack);
+            break; 
+        case 'All':
+            mNow = m.format(),
+            mBack = m.add(12, 'month').format();
+            console.log(mNow);
+            console.log(mBack);
+
+            break;  
+      }
+    const dbuser = await firestore.collection("user")
+    // .where('rank','==','Staff')
+    const dbinout =await  firestore.collection("checkinout")
+
+    const queryDBUserSnapshot = await dbuser.get()
+    const dbUserDocs = queryDBUserSnapshot.docs.map(doc => doc.data());
+    const last = await Promise.all(dbUserDocs.map(async (data) => {
+            let temp ={ info: data }
+            const result = await dbinout.where('userId','==', data.userId)
+            .where("dateShow",">=",mNow).where("dateShow","<",mBack).orderBy('dateShow').get()
+            const inout = result.docs.map(doc => doc.data());
+            data['inout'] = inout
+            return temp
+    }));
+    res.json(last)
+})
