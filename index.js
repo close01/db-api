@@ -197,14 +197,15 @@ app.post('/api/post/leave',async (req,res) => {
                         "type": "uri",
                         "label": "Click",
                         "uri": "https://liff.line.me/1655736391-Xkb94MeP"
-                    },
-                    "actions": [
-                        {
-                          "type": "uri",
-                          "label": "Click",
-                          "uri": "https://liff.line.me/1655736391-Xkb94MeP"
-                        }
-                    ]
+                    }
+                    ,
+                    // "actions": [
+                    //     {
+                    //       "type": "uri",
+                    //       "label": "Click",
+                    //       "uri": "https://liff.line.me/1655736391-Xkb94MeP"
+                    //     }
+                    // ]
                 }
               }]
         })
@@ -990,7 +991,7 @@ function reply() {
     });
 }
 ///////////////////////////////////////////////////////////////
-app.get('/get/report/inout/user/:doc',async (req,res) => {
+app.get('/get/report/inout/user1/:doc',async (req,res) => {
     let m = moment("20190101") // 2021-01-01T00:00:00+07:00 yyyy-mm-dd
     let mNow = ""
     let mBack = ""
