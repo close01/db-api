@@ -197,15 +197,14 @@ app.post('/api/post/leave',async (req,res) => {
                         "type": "uri",
                         "label": "Click",
                         "uri": "https://liff.line.me/1655736391-Xkb94MeP"
-                    }
-                    ,
-                    // "actions": [
-                    //     {
-                    //       "type": "uri",
-                    //       "label": "Click",
-                    //       "uri": "https://liff.line.me/1655736391-Xkb94MeP"
-                    //     }
-                    // ]
+                    },
+                    "actions": [
+                        {
+                          "type": "uri",
+                          "label": "Click",
+                          "uri": "https://liff.line.me/1655736391-Xkb94MeP"
+                        }
+                    ]
                 }
               }]
         })
