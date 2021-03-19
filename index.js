@@ -1,7 +1,6 @@
 const express = require('express');
 
 const app = express();
-
 app.use(express.json());
 
 const port = process.env.PORT || 3305
@@ -198,14 +197,15 @@ app.post('/api/post/leave',async (req,res) => {
                         "type": "uri",
                         "label": "Click",
                         "uri": "https://liff.line.me/1655736391-Xkb94MeP"
-                    },
-                    "actions": [
-                        {
-                          "type": "uri",
-                          "label": "Click",
-                          "uri": "https://liff.line.me/1655736391-Xkb94MeP"
-                        }
-                    ]
+                    }
+                    ,
+                    // "actions": [
+                    //     {
+                    //       "type": "uri",
+                    //       "label": "Click",
+                    //       "uri": "https://liff.line.me/1655736391-Xkb94MeP"
+                    //     }
+                    // ]
                 }
               }]
         })
