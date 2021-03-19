@@ -10,14 +10,14 @@ const firebase = require("firebase/app")
 require("firebase/firestore")
 
 var config = {
-    apiKey: "AIzaSyDUDEe4xAIS2egIxuWEWwbPdPp9ifyA0xE",
-    authDomain: "back-e036d.firebaseapp.com",
-    databaseURL: "https://back-e036d-default-rtdb.firebaseio.com",
-    projectId: "back-e036d",
-    storageBucket: "back-e036d.appspot.com",
-    messagingSenderId: "449356049325",
-    appId: "1:449356049325:web:c65192887db0f30be8cf24",
-    measurementId: "G-2ZQP5ZRXBF"   
+    apiKey: "AIzaSyCWgoJJ8vuq4yvQ7_SVSR7QlDm9IC9pKIQ",
+    authDomain: "db-line.firebaseapp.com",
+    databaseURL: "https://db-line-default-rtdb.firebaseio.com/",
+    projectId: "db-line",
+    storageBucket: "db-line.appspot.com",
+    messagingSenderId: "884410910476",
+    appId: "1:884410910476:web:a82427fcd0373d7a7f6b29",
+    measurementId: "G-DKLM0V4EYN"   
 };
 firebase.initializeApp(config);
 let firestore = firebase.firestore()
